@@ -170,6 +170,25 @@
   }
   .addon-pill.active { background: var(--series-1); color: #fff; border-color: var(--series-1); }
 
+  .protein-chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .protein-chip {
+    display: flex; align-items: center; gap: 5px; border: 1px solid var(--border); background: var(--page-plane);
+    border-radius: 999px; padding: 5px 6px 5px 11px; font-size: 12.5px; font-weight: 600; color: var(--text-primary);
+  }
+  .protein-chip button {
+    border: none; background: rgba(32,28,20,0.08); color: var(--text-secondary); border-radius: 50%;
+    width: 18px; height: 18px; font-size: 12px; line-height: 1; font-family: inherit;
+  }
+  .protein-add-row { display: flex; gap: 6px; margin-top: 10px; }
+  .protein-add-row input {
+    flex: 1; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--border);
+    font-size: 13px; font-family: inherit; background: var(--surface-1); color: var(--text-primary);
+  }
+  .protein-add-row button {
+    padding: 8px 14px; border-radius: 10px; border: none; background: var(--series-1); color: #fff;
+    font-weight: 700; font-size: 13px; font-family: inherit;
+  }
+
   .pay-warning { color: var(--critical); font-size: 12px; margin: -4px 0 8px; }
   .pay-warning.hidden { display: none; }
   .totals-row.grand.bad { color: var(--critical); }
@@ -406,6 +425,14 @@
         <button class="btn-secondary" id="importMenuBtn" style="margin-top:4px;">📥 นำเข้าเมนูเพิ่ม (ไม่ลบเมนู/ออเดอร์เดิม)</button>
         <input type="file" id="importMenuFileInput" accept="application/json" style="display:none;">
       </div>
+      <div class="card">
+        <div class="cat-label" style="margin-top:0">จัดการตัวเลือกเนื้อสัตว์ (ราคาเท่ากันทุกตัวเลือก ไม่ต้องใส่ต้นทุน)</div>
+        <div class="protein-chip-row" id="proteinChipRow"></div>
+        <div class="protein-add-row">
+          <input type="text" id="proteinNewInput" placeholder="ชื่อเนื้อสัตว์ใหม่ เช่น ไข่เจียว">
+          <button type="button" id="proteinAddBtn">+ เพิ่ม</button>
+        </div>
+      </div>
       <div class="card" style="padding:6px 12px;">
         <div id="menuMgmtList"></div>
       </div>
@@ -602,16 +629,8 @@
     { key: 'extra', label: 'พิเศษ', price: 10, cost: 4, emoji: '⭐' }
   ];
   // ราคาขายเท่ากันทุกตัวเลือกเนื้อสัตว์ (ตามป้ายเมนูหน้าร้าน: ธรรมดา 50 / พิเศษ 60 ใช้ปุ่ม "พิเศษ" ด้านบนแทน)
-  var PROTEINS = [
-    { key: 'moo', label: 'หมู' },
-    { key: 'gai', label: 'ไก่' },
-    { key: 'kai_gai', label: 'เครื่องในไก่' },
-    { key: 'talay', label: 'ทะเล' },
-    { key: 'moo_krob', label: 'หมูกรอบ' },
-    { key: 'moo_yor', label: 'หมูยอ' },
-    { key: 'neua', label: 'เนื้อวัว' },
-    { key: 'pla_muek', label: 'ปลาหมึก' }
-  ];
+  // แก้ไข/เพิ่ม/ลบรายการนี้เองได้ที่หน้า "จัดการเมนู" — ไม่ต้องระบุต้นทุน เพราะไม่มีผลต่อราคา/ต้นทุนอาหาร
+  var PROTEINS = ['หมู', 'ไก่', 'เครื่องในไก่', 'ทะเล', 'หมูกรอบ', 'หมูยอ', 'เนื้อวัว', 'ปลาหมึก'];
   // หมวดที่ต้องเลือกเนื้อสัตว์ก่อน (จานเดียว/เมนูเส้น) — ยกเว้นเมนูที่ตั้งค่า noProtein ไว้ (เช่น เมนูที่ระบุวัตถุดิบตายตัวในชื่ออยู่แล้ว)
   var PROTEIN_CATS = ['จานเดียว', 'เมนูเส้น'];
   var orders = [];      // {id, table, orderType:'dinein'|'takeaway', items:[{menuId,name,basePrice,baseCost,addon,qty}], status:'open'|'paid', createdAt, paidAt, paymentMethod, cashReceived, change}
@@ -631,13 +650,11 @@
 
   // ---------- Add-on / protein / line-item helpers ----------
   function addonInfo(key) { return ADDONS.find(function (a) { return a.key === key; }); }
-  function proteinInfo(key) { return PROTEINS.find(function (p) { return p.key === key; }); }
   function unitPrice(l) { var a = addonInfo(l.addon); return l.basePrice + (a ? a.price : 0); }
   function unitCost(l) { var a = addonInfo(l.addon); return l.baseCost + (a ? a.cost : 0); }
   function displayName(l) {
     var tags = [];
-    var p = proteinInfo(l.protein);
-    if (p) tags.push(p.label);
+    if (l.protein) tags.push(l.protein);
     var a = addonInfo(l.addon);
     if (a) tags.push(a.label);
     return l.name + (tags.length ? ' (' + tags.join(', ') + ')' : '');
@@ -669,7 +686,7 @@
     document.getElementById('menuAddFab').style.display = (name === 'menu') ? 'block' : 'none';
     if (name === 'bills') renderBills();
     if (name === 'dashboard') renderDashboard();
-    if (name === 'menu') renderMenuMgmt();
+    if (name === 'menu') { renderMenuMgmt(); renderProteinMgmt(); }
   }
 
   // ---------- Render: order/menu picker ----------
@@ -741,9 +758,9 @@
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'quick-addon-btn';
-      btn.innerHTML = '<span>' + p.label + '</span>';
+      btn.innerHTML = '<span>' + p + '</span>';
       btn.addEventListener('click', function () {
-        openQuickAddonSheet(m, p.key);
+        openQuickAddonSheet(m, p);
       });
       proteinWrap.appendChild(btn);
     });
@@ -752,7 +769,7 @@
 
   // ---------- Add-on picker (step 2, or step 1 for dishes without protein choice) ----------
   function openQuickAddonSheet(m, protein) {
-    var proteinLabel = protein ? proteinInfo(protein).label : null;
+    var proteinLabel = protein || null;
     document.getElementById('quickAddonTitle').textContent = m.name + (proteinLabel ? ' (' + proteinLabel + ')' : '') + ' · เลือกเพิ่มเติม';
     document.getElementById('quickProteinButtons').style.display = 'none';
     var wrap = document.getElementById('quickAddonButtons');
@@ -814,7 +831,7 @@
       var top = document.createElement('div');
       top.className = 'cart-line-top';
       var tagBits = [];
-      if (l.protein) tagBits.push(proteinInfo(l.protein).label);
+      if (l.protein) tagBits.push(l.protein);
       if (l.addon) tagBits.push(addonInfo(l.addon).label);
       top.innerHTML =
         '<div><div class="li-name">' + l.name + (tagBits.length ? ' <span style="color:var(--series-1);">(' + tagBits.join(', ') + ')</span>' : '') + '</div><div class="li-price">' + fmt(up) + ' / จาน</div></div>' +
@@ -1272,6 +1289,45 @@
     });
   }
 
+  // ---------- Protein/meat-type management (no cost/price — style only) ----------
+  function renderProteinMgmt() {
+    var wrap = document.getElementById('proteinChipRow');
+    wrap.innerHTML = '';
+    if (PROTEINS.length === 0) {
+      wrap.innerHTML = '<div class="empty-state" style="padding:8px 0;">ยังไม่มีตัวเลือกเนื้อสัตว์ — เพิ่มด้านล่างได้เลย</div>';
+      return;
+    }
+    PROTEINS.forEach(function (p) {
+      var chip = document.createElement('div');
+      chip.className = 'protein-chip';
+      chip.innerHTML = '<span>' + p + '</span>';
+      var delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.textContent = '✕';
+      delBtn.title = 'ลบ';
+      delBtn.addEventListener('click', function () {
+        if (!confirm('ลบตัวเลือกเนื้อสัตว์ "' + p + '" ใช่ไหม?')) return;
+        PROTEINS = PROTEINS.filter(function (x) { return x !== p; });
+        saveState();
+        renderProteinMgmt();
+      });
+      chip.appendChild(delBtn);
+      wrap.appendChild(chip);
+    });
+  }
+
+  document.getElementById('proteinAddBtn').addEventListener('click', function () {
+    var input = document.getElementById('proteinNewInput');
+    var val = input.value.trim();
+    if (!val) return;
+    if (PROTEINS.indexOf(val) !== -1) { showToast('มีตัวเลือกนี้อยู่แล้ว'); return; }
+    PROTEINS.push(val);
+    input.value = '';
+    saveState();
+    renderProteinMgmt();
+    showToast('เพิ่ม "' + val + '" แล้ว');
+  });
+
   document.getElementById('menuAddFab').addEventListener('click', function () { openItemSheet(null); });
 
   function openItemSheet(id) {
@@ -1505,6 +1561,7 @@
     try {
       var state = {
         menu: menu,
+        proteins: PROTEINS,
         orders: orders.map(function (o) {
           return Object.assign({}, o, {
             createdAt: o.createdAt ? o.createdAt.toISOString() : null,
@@ -1532,6 +1589,7 @@
       if (!raw) return;
       var state = JSON.parse(raw);
       if (state.menu && state.menu.length) menu = state.menu;
+      if (state.proteins && state.proteins.length) PROTEINS = state.proteins;
       if (state.orders) {
         orders = state.orders.map(function (o) {
           return Object.assign({}, o, {
