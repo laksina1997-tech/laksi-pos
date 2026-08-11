@@ -323,7 +323,7 @@
       </div>
     </div>
     <div class="sub" id="todayLabel"></div>
-    <span class="save-badge" id="saveBadge">✓ บันทึกอัตโนมัติในเครื่องนี้</span>
+    <span class="save-badge" id="saveBadge">↻ กำลังเชื่อมต่อคลาวด์...</span>
   </header>
 
   <main>
@@ -604,7 +604,38 @@
 
 </div>
 
-<script>
+<script type="module">
+  // ---------- Cloud sync (Firebase — shares data live across every device that opens this page) ----------
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+  import {
+    getAuth, signInAnonymously, onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+  import {
+    initializeFirestore, persistentLocalCache, persistentSingleTabManager,
+    doc, setDoc, onSnapshot
+  } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+  var firebaseConfig = {
+    apiKey: "AIzaSyCWQAyUCy6SdJrborZaLvvYw8lteOBHHVo",
+    authDomain: "laksi-pos.firebaseapp.com",
+    projectId: "laksi-pos",
+    storageBucket: "laksi-pos.firebasestorage.app",
+    messagingSenderId: "511675072246",
+    appId: "1:511675072246:web:3ec20313b87801c00fb6d7"
+  };
+  var fbApp = initializeApp(firebaseConfig);
+  var fbAuth = getAuth(fbApp);
+  var db;
+  try {
+    db = initializeFirestore(fbApp, {
+      localCache: persistentLocalCache({ tabManager: persistentSingleTabManager() })
+    });
+  } catch (e) {
+    // เบราว์เซอร์/บริบทนี้ไม่รองรับแคชออฟไลน์ (เช่น เปิดหลายแท็บพร้อมกัน) — ยังใช้งานได้ปกติ แค่ไม่มีแคชออฟไลน์
+    db = initializeFirestore(fbApp, {});
+  }
+  var stateDocRef = doc(db, 'shops', 'laksi');
+
 (function () {
   // ---------- In-memory demo data (resets on reload — this is a preview build) ----------
   var menu = [
@@ -1555,87 +1586,153 @@
     e.target.value = '';
   });
 
-  // ---------- Persistent storage (this device only) ----------
-  var STORAGE_KEY = 'laksi_pos_state_v1';
-  var storageOk = true;
-
-  function saveState() {
-    if (!storageOk) return;
-    try {
-      var state = {
-        menu: menu,
-        proteins: PROTEINS,
-        orders: orders.map(function (o) {
-          return Object.assign({}, o, {
-            createdAt: o.createdAt ? o.createdAt.toISOString() : null,
-            paidAt: o.paidAt ? o.paidAt.toISOString() : null
-          });
-        }),
-        expenses: expenses.map(function (e) {
-          return Object.assign({}, e, { date: e.date.toISOString() });
-        }),
-        nextMenuId: nextMenuId,
-        nextOrderId: nextOrderId,
-        nextExpenseId: nextExpenseId
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      setSaveBadge(true);
-    } catch (e) {
-      storageOk = false;
-      setSaveBadge(false);
-    }
+  // ---------- Full re-render (used whenever data arrives from the cloud) ----------
+  function renderAll() {
+    var searchBox = document.getElementById('menuSearchInput');
+    renderMenuList(searchBox ? searchBox.value.trim() : '');
+    renderCartBar();
+    var activeSection = document.querySelector('.view.active');
+    var activeName = activeSection ? activeSection.id.replace('view-', '') : '';
+    if (activeName === 'bills') renderBills();
+    if (activeName === 'dashboard') renderDashboard();
+    if (activeName === 'menu') { renderMenuMgmt(); renderProteinMgmt(); }
   }
 
-  function loadState() {
+  // ---------- Persistent storage: Firestore (shared, live across every device) + localStorage (instant local cache) ----------
+  var STORAGE_KEY = 'laksi_pos_state_v1';
+  var storageOk = true;
+  var applyingRemote = false; // true while applying data that just arrived from the cloud, so we don't echo it straight back
+
+  function buildStateBlob() {
+    return {
+      menu: menu,
+      proteins: PROTEINS,
+      orders: orders.map(function (o) {
+        return Object.assign({}, o, {
+          createdAt: o.createdAt ? o.createdAt.toISOString() : null,
+          paidAt: o.paidAt ? o.paidAt.toISOString() : null
+        });
+      }),
+      expenses: expenses.map(function (e) {
+        return Object.assign({}, e, { date: e.date.toISOString() });
+      }),
+      nextMenuId: nextMenuId,
+      nextOrderId: nextOrderId,
+      nextExpenseId: nextExpenseId
+    };
+  }
+
+  function applyState(state) {
+    if (!state) return;
+    if (state.menu && state.menu.length) menu = state.menu;
+    if (state.proteins && state.proteins.length) PROTEINS = state.proteins;
+    if (state.orders) {
+      orders = state.orders.map(function (o) {
+        return Object.assign({}, o, {
+          createdAt: o.createdAt ? new Date(o.createdAt) : new Date(),
+          paidAt: o.paidAt ? new Date(o.paidAt) : null
+        });
+      });
+    }
+    if (state.expenses) {
+      expenses = state.expenses.map(function (e) {
+        return Object.assign({}, e, { date: new Date(e.date) });
+      });
+    }
+    nextMenuId = state.nextMenuId || nextMenuId;
+    nextOrderId = state.nextOrderId || nextOrderId;
+    nextExpenseId = state.nextExpenseId || nextExpenseId;
+  }
+
+  function loadLocalCacheIfAny() {
     try {
       var raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return;
-      var state = JSON.parse(raw);
-      if (state.menu && state.menu.length) menu = state.menu;
-      if (state.proteins && state.proteins.length) PROTEINS = state.proteins;
-      if (state.orders) {
-        orders = state.orders.map(function (o) {
-          return Object.assign({}, o, {
-            createdAt: o.createdAt ? new Date(o.createdAt) : new Date(),
-            paidAt: o.paidAt ? new Date(o.paidAt) : null
-          });
-        });
-      }
-      if (state.expenses) {
-        expenses = state.expenses.map(function (e) {
-          return Object.assign({}, e, { date: new Date(e.date) });
-        });
-      }
-      nextMenuId = state.nextMenuId || nextMenuId;
-      nextOrderId = state.nextOrderId || nextOrderId;
-      nextExpenseId = state.nextExpenseId || nextExpenseId;
+      applyState(JSON.parse(raw));
     } catch (e) {
-      // ignore corrupted/unavailable storage — app still works, just starts empty
+      // ignore corrupted/unavailable cache — app still works, just starts from the built-in seed data
     }
   }
 
-  function setSaveBadge(ok) {
+  function saveState() {
+    var state = buildStateBlob();
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      storageOk = false;
+    }
+    if (applyingRemote) return; // this save was triggered while applying an incoming update — don't push it straight back
+    if (db && stateDocRef) {
+      setSyncBadge('syncing');
+      setDoc(stateDocRef, state).then(function () {
+        setSyncBadge('synced');
+      }).catch(function (e) {
+        console.error('บันทึกขึ้นคลาวด์ไม่สำเร็จ', e);
+        setSyncBadge('error');
+      });
+    } else {
+      setSyncBadge(storageOk ? 'local' : 'error');
+    }
+  }
+
+  function setSyncBadge(status) {
     var el = document.getElementById('saveBadge');
     if (!el) return;
-    if (ok) {
-      el.textContent = '✓ บันทึกอัตโนมัติในเครื่องนี้';
-      el.classList.remove('warn');
+    el.classList.remove('warn');
+    if (status === 'synced') {
+      el.textContent = '✓ ซิงค์กับคลาวด์แล้ว (เรียลไทม์)';
+    } else if (status === 'syncing') {
+      el.textContent = '↻ กำลังบันทึกขึ้นคลาวด์...';
+    } else if (status === 'connecting') {
+      el.textContent = '↻ กำลังเชื่อมต่อคลาวด์...';
+    } else if (status === 'local') {
+      el.textContent = '✓ บันทึกอัตโนมัติในเครื่องนี้ (ยังไม่เชื่อมคลาวด์)';
     } else {
-      el.textContent = '⚠ บันทึกอัตโนมัติไม่สำเร็จ (พื้นที่เก็บข้อมูลเบราว์เซอร์ไม่พร้อมใช้งาน)';
+      el.textContent = '⚠ ซิงค์ไม่สำเร็จ กำลังลองใหม่...';
       el.classList.add('warn');
     }
   }
 
+  // ---------- Cloud sync: sign in anonymously, then listen live ----------
+  var unsubscribeSnapshot = null;
+  function startCloudSync() {
+    setSyncBadge('connecting');
+    onAuthStateChanged(fbAuth, function (user) {
+      if (!user || unsubscribeSnapshot) return;
+      unsubscribeSnapshot = onSnapshot(stateDocRef, function (snap) {
+        if (snap.exists()) {
+          var data = snap.data();
+          applyingRemote = true;
+          applyState(data);
+          applyingRemote = false;
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+          renderAll();
+          setSyncBadge('synced');
+        } else {
+          // first-ever run for this shop — seed the cloud database with whatever this device currently has
+          saveState();
+        }
+      }, function (err) {
+        console.error('Firestore sync error', err);
+        setSyncBadge('error');
+      });
+    });
+    signInAnonymously(fbAuth).catch(function (e) {
+      console.error('เข้าสู่ระบบไม่สำเร็จ', e);
+      setSyncBadge('error');
+    });
+  }
+
   // ---------- Init ----------
-  loadState();
+  loadLocalCacheIfAny(); // paint instantly from the last-known snapshot while the cloud connects
   var todayStart = startOfDay(new Date());
   currentRange = { from: todayStart, to: addDays(todayStart, 1) };
   document.getElementById('rangeFrom').value = toDateInputValue(todayStart);
   document.getElementById('rangeTo').value = toDateInputValue(todayStart);
   document.getElementById('todayLabel').textContent = new Date().toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-  setSaveBadge(true);
   renderMenuList();
   renderCartBar();
+  startCloudSync();
 })();
 </script>
 </body>
