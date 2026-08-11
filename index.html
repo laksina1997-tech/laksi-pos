@@ -1391,6 +1391,7 @@
     var state = {
       exportedAt: new Date().toISOString(),
       menu: menu,
+      proteins: PROTEINS,
       orders: orders.map(function (o) {
         return Object.assign({}, o, {
           createdAt: o.createdAt ? o.createdAt.toISOString() : null,
@@ -1467,6 +1468,7 @@
       if (!ok) return;
       try {
         menu = state.menu;
+        if (state.proteins && state.proteins.length) PROTEINS = state.proteins;
         orders = state.orders.map(function (o) {
           return Object.assign({}, o, {
             createdAt: o.createdAt ? new Date(o.createdAt) : new Date(),
@@ -1482,6 +1484,7 @@
         saveState();
         renderMenuList();
         renderMenuMgmt();
+        renderProteinMgmt();
         renderDashboard();
         renderCartBar();
         showToast('นำเข้าข้อมูลสำเร็จ');
