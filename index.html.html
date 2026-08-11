@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LAKSI">
+<meta name="theme-color" content="#2f6b45">
+<link rel="apple-touch-icon" href="data:image/jpeg;base64,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">
+<title>LAKSI - รับออเดอร์ & คิดเงิน</title>
+<style>
+  :root {
+    --surface-1:      #fffdf7;
+    --page-plane:     #f6efe1;
+    --text-primary:   #201c14;
+    --text-secondary: #675e4d;
+    --text-muted:     #948a76;
+    --gridline:       #e6ddc7;
+    --baseline:       #c9bea5;
+    --border:         rgba(32,28,20,0.12);
+    --series-1:       #2f6b45;
+    --series-2:       #805f20;
+    --good:           #0ca30c;
+    --good-text:      #006300;
+    --warning:        #fab219;
+    --critical:       #d03b3b;
+    --radius:         14px;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: var(--page-plane);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans Thai", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  #app { max-width: 480px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; background: var(--page-plane); }
+
+  header.topbar {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--surface-1); border-bottom: 1px solid var(--border);
+    padding: 14px 16px 10px;
+  }
+  header.topbar .brand-row { display: flex; align-items: center; gap: 10px; }
+  header.topbar .logo-img {
+    width: 42px; height: 42px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+  header.topbar h1 { margin: 0; font-size: 17px; font-weight: 700; }
+  header.topbar .brand-sub { margin-top: 1px; font-size: 11.5px; color: var(--text-secondary); }
+  header.topbar .sub { margin-top: 6px; font-size: 12px; color: var(--text-secondary); }
+  .save-badge {
+    display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 600;
+    color: var(--series-1); background: #e3efe6; border: 1px solid #cfe3d5;
+    padding: 2px 8px; border-radius: 999px;
+  }
+  .save-badge.warn {
+    color: #6b4f18; background: #f2e5c4; border: 1px solid #e1cfa0;
+  }
+
+  main { flex: 1; padding: 12px 12px 84px; }
+  section.view { display: none; }
+  section.view.active { display: block; animation: fadein .15s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(4px);} to { opacity:1; transform: translateY(0);} }
+
+  h2.view-title { font-size: 15px; font-weight: 700; margin: 4px 2px 10px; color: var(--text-primary); }
+
+  .card {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 12px; margin-bottom: 10px;
+  }
+  .card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .card-head .add-link { border: none; background: none; color: var(--series-1); font-weight: 700; font-size: 12.5px; font-family: inherit; padding: 2px; }
+
+  /* ---- Order view ---- */
+  .menu-search {
+    width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border);
+    font-size: 14px; font-family: inherit; background: var(--surface-1); color: var(--text-primary);
+    margin-bottom: 12px; -webkit-appearance: none; appearance: none;
+  }
+  .menu-search::-webkit-search-cancel-button { -webkit-appearance: searchfield-cancel-button; }
+  .cat-label { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .03em; margin: 14px 2px 6px; }
+  .cat-label:first-child { margin-top: 2px; }
+  .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .menu-item {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+    padding: 10px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 4px;
+    font-family: inherit; color: var(--text-primary);
+  }
+  .menu-item:active { background: #e8f0ea; border-color: var(--series-1); }
+  .menu-item .name { font-size: 13px; font-weight: 600; line-height: 1.3; }
+  .menu-item .price { font-size: 13px; font-weight: 700; color: var(--series-1); }
+
+  .cart-bar {
+    position: fixed; left: 0; right: 0; bottom: 58px; z-index: 15;
+    display: flex; justify-content: center; pointer-events: none;
+  }
+  .cart-bar-inner {
+    pointer-events: auto; width: 100%; max-width: 480px; margin: 0 12px;
+    background: var(--text-primary); color: #fff; border-radius: 14px;
+    padding: 12px 14px; display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+  }
+  .cart-bar-inner.hidden { display: none; }
+  .cart-bar-inner .cnt { font-size: 13px; font-weight: 600; }
+  .cart-bar-inner .amt { font-size: 15px; font-weight: 700; }
+  .cart-bar-inner button {
+    background: #fff; color: var(--text-primary); border: none; border-radius: 10px;
+    padding: 8px 14px; font-weight: 700; font-size: 13px;
+  }
+
+  /* ---- Bottom nav ---- */
+  nav.tabbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    display: flex; justify-content: center; background: var(--surface-1); border-top: 1px solid var(--border);
+  }
+  nav.tabbar .inner { width: 100%; max-width: 480px; display: flex; }
+  nav.tabbar button {
+    flex: 1; background: none; border: none; padding: 8px 0 10px; display: flex; flex-direction: column;
+    align-items: center; gap: 2px; font-family: inherit; color: var(--text-muted); font-size: 10.5px; font-weight: 600;
+  }
+  nav.tabbar button .ic { font-size: 19px; line-height: 1; }
+  nav.tabbar button.active { color: var(--series-1); }
+
+  /* ---- Modal (order editor / bill) ---- */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(11,11,11,0.45); z-index: 30;
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .overlay.hidden { display: none; }
+  .sheet {
+    background: var(--surface-1); width: 100%; max-width: 480px; border-radius: 18px 18px 0 0;
+    max-height: 88vh; display: flex; flex-direction: column; overflow: hidden;
+  }
+  .sheet-head { padding: 14px 16px 10px; border-bottom: 1px solid var(--gridline); display:flex; align-items:center; justify-content:space-between; }
+  .sheet-head h3 { margin: 0; font-size: 15px; }
+  .sheet-head .close { border: none; background: var(--page-plane); border-radius: 50%; width: 30px; height: 30px; font-size: 15px; color: var(--text-secondary); }
+  .sheet-body { padding: 12px 16px; overflow-y: auto; }
+  .sheet-foot { padding: 12px 16px 18px; border-top: 1px solid var(--gridline); }
+
+  .line-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--gridline); }
+  .line-row:last-child { border-bottom: none; }
+  .line-row .li-name { flex: 1; font-size: 13.5px; font-weight: 600; }
+  .line-row .li-price { font-size: 12px; color: var(--text-secondary); }
+  .qty-ctl { display: flex; align-items: center; gap: 6px; }
+  .qty-ctl button {
+    width: 26px; height: 26px; border-radius: 8px; border: 1px solid var(--border); background: var(--page-plane);
+    font-size: 15px; font-weight: 700; color: var(--text-primary);
+  }
+  .qty-ctl .q { min-width: 18px; text-align: center; font-weight: 700; font-size: 13px; }
+  .li-total { min-width: 56px; text-align: right; font-weight: 700; font-size: 13px; }
+
+  .cart-line { padding: 8px 0; border-bottom: 1px solid var(--gridline); }
+  .cart-line:last-child { border-bottom: none; }
+  .cart-line-top { display: flex; align-items: center; gap: 8px; }
+  .cart-line-top .li-name { flex: 1; font-size: 13.5px; font-weight: 600; }
+  .cart-line-top .li-price { font-size: 12px; color: var(--text-secondary); }
+  .addon-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 7px; }
+  .addon-pill {
+    border: 1px solid var(--border); background: var(--page-plane); border-radius: 999px;
+    padding: 5px 9px; font-size: 11px; font-weight: 600; color: var(--text-secondary); font-family: inherit;
+  }
+  .addon-pill.active { background: var(--series-1); color: #fff; border-color: var(--series-1); }
+
+  .pay-warning { color: var(--critical); font-size: 12px; margin: -4px 0 8px; }
+  .pay-warning.hidden { display: none; }
+  .totals-row.grand.bad { color: var(--critical); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 78px; transform: translateX(-50%); z-index: 40;
+    background: var(--text-primary); color: #fff; padding: 10px 16px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; box-shadow: 0 6px 16px rgba(0,0,0,0.25); max-width: 88%; text-align: center;
+  }
+  .toast.hidden { display: none; }
+
+  .quick-addon-btn {
+    width: 100%; text-align: left; padding: 14px; border-radius: 12px; border: 1px solid var(--border);
+    background: var(--page-plane); font-family: inherit; font-size: 14px; font-weight: 600; color: var(--text-primary);
+    margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .quick-addon-btn:active { background: #e8f0ea; border-color: var(--series-1); }
+  .quick-addon-btn .plus { color: var(--series-1); font-weight: 700; }
+
+  .field { margin-bottom: 10px; }
+  .field label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; }
+  .field input, .field select {
+    width: 100%; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--border);
+    font-size: 14px; font-family: inherit; background: var(--page-plane); color: var(--text-primary);
+  }
+
+  .seg-control { display: flex; gap: 6px; margin-bottom: 10px; }
+  .seg-btn {
+    flex: 1; padding: 9px; border-radius: 10px; border: 1px solid var(--border); background: var(--page-plane);
+    font-weight: 700; font-size: 13px; color: var(--text-secondary); font-family: inherit;
+  }
+  .seg-btn.active { background: var(--series-1); color: #fff; border-color: var(--series-1); }
+
+  .btn-primary {
+    width: 100%; padding: 12px; border-radius: 12px; border: none; background: var(--series-1); color: #fff;
+    font-weight: 700; font-size: 14.5px; font-family: inherit;
+  }
+  .btn-primary:disabled { background: var(--baseline); }
+  .btn-secondary {
+    width: 100%; padding: 11px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-1);
+    color: var(--text-primary); font-weight: 700; font-size: 13.5px; font-family: inherit; margin-top: 8px;
+  }
+  .btn-danger { color: var(--critical); }
+
+  .totals-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-secondary); padding: 3px 0; }
+  .totals-row.grand { font-size: 16px; font-weight: 700; color: var(--text-primary); padding-top: 6px; margin-top: 4px; border-top: 1px dashed var(--gridline); }
+
+  /* ---- Bills / open tables view ---- */
+  .table-card { display: flex; align-items: center; justify-content: space-between; }
+  .table-card .t-name { font-weight: 700; font-size: 14px; }
+  .table-card .t-meta { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .table-card .t-amt { font-weight: 700; font-size: 15px; color: var(--series-1); }
+  .table-card .go { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .empty-state { text-align: center; color: var(--text-muted); font-size: 13px; padding: 40px 10px; }
+
+  .type-badge { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 999px; margin-top: 4px; }
+  .type-badge.dinein { background: #e3efe6; color: var(--series-1); }
+  .type-badge.takeaway { background: #f7ecd7; color: var(--series-2); }
+
+  /* ---- Dashboard ---- */
+  .range-bar { display: flex; gap: 6px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 2px; }
+  .range-btn {
+    flex-shrink: 0; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-1);
+    font-size: 12px; font-weight: 600; color: var(--text-secondary); font-family: inherit;
+  }
+  .range-btn.active { background: var(--series-1); color: #fff; border-color: var(--series-1); }
+  .range-custom { display: flex; gap: 8px; margin-bottom: 4px; }
+  .range-custom.hidden { display: none; }
+  .range-custom .field { flex: 1; margin-bottom: 8px; }
+  .range-label { font-size: 12px; color: var(--text-muted); margin: 0 2px 10px; }
+
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .stat-tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
+  .stat-tile .label { font-size: 11.5px; color: var(--text-secondary); font-weight: 600; }
+  .stat-tile .value { font-size: 19px; font-weight: 700; margin-top: 4px; }
+  .stat-tile .value.good { color: var(--good-text); }
+  .stat-tile .value.bad { color: var(--critical); }
+  .stat-tile .delta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  .chip-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .chip { flex: 1; background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 9px 10px; text-align: center; }
+  .chip .c-label { font-size: 10.5px; color: var(--text-secondary); font-weight: 600; }
+  .chip .c-val { font-size: 14px; font-weight: 700; margin-top: 3px; }
+
+  .bar-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; }
+  .bar-row .b-label { width: 96px; font-size: 12px; color: var(--text-secondary); flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track { flex: 1; height: 10px; background: var(--gridline); border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--series-1); border-radius: 5px; }
+  .bar-row .b-val { width: 40px; text-align: right; font-size: 12px; font-weight: 700; color: var(--text-primary); }
+
+  .exp-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--gridline); }
+  .exp-row:last-child { border-bottom: none; }
+  .exp-row .e-info { flex: 1; }
+  .exp-row .e-cat { font-size: 13px; font-weight: 600; }
+  .exp-row .e-meta { font-size: 11.5px; color: var(--text-secondary); margin-top: 2px; }
+  .exp-row .e-amt { font-weight: 700; font-size: 13px; color: var(--critical); white-space: nowrap; }
+  .exp-row .e-del { border: none; background: none; color: var(--text-muted); font-size: 17px; padding: 2px 4px; line-height: 1; }
+
+  .hist-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--gridline); cursor: pointer; }
+  .hist-row:last-child { border-bottom: none; }
+  .hist-row .h-date { font-size: 13px; font-weight: 700; }
+  .hist-row .h-sub { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+  .hist-row .h-profit { font-weight: 700; font-size: 13px; }
+  .hist-row .h-profit.neg { color: var(--critical); }
+  .hist-row .h-profit.pos { color: var(--good-text); }
+
+  /* ---- Menu management ---- */
+  .menu-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--gridline); }
+  .menu-row:last-child { border-bottom: none; }
+  .menu-row .m-info { flex: 1; }
+  .menu-row .m-name { font-size: 13.5px; font-weight: 600; }
+  .menu-row .m-meta { font-size: 11.5px; color: var(--text-secondary); margin-top: 2px; }
+  .menu-row .m-margin { font-size: 11px; font-weight: 700; color: var(--good-text); }
+  .menu-row .edit-btn { border: 1px solid var(--border); background: var(--page-plane); border-radius: 8px; padding: 6px 10px; font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+
+  .fab {
+    position: fixed; right: 16px; bottom: 74px; z-index: 18;
+    width: 48px; height: 48px; border-radius: 50%; background: var(--series-1); color: #fff;
+    border: none; font-size: 22px; box-shadow: 0 6px 16px rgba(42,120,214,0.4);
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand-row">
+      <img class="logo-img" src="data:image/jpeg;base64,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" alt="LAKSI logo">
+      <div>
+        <h1>LAKSI</h1>
+        <div class="brand-sub">ร้านอาหารลักศิ · Authentic Thai Cuisine</div>
+      </div>
+    </div>
+    <div class="sub" id="todayLabel"></div>
+    <span class="save-badge" id="saveBadge">✓ บันทึกอัตโนมัติในเครื่องนี้</span>
+  </header>
+
+  <main>
+
+    <!-- ORDER VIEW -->
+    <section class="view active" id="view-order">
+      <h2 class="view-title">แตะเมนูเพื่อเพิ่มลงออเดอร์</h2>
+      <input type="search" id="menuSearchInput" class="menu-search" placeholder="🔍 ค้นหาเมนู...">
+      <div id="menuList"></div>
+    </section>
+
+    <!-- BILLS VIEW -->
+    <section class="view" id="view-bills">
+      <h2 class="view-title">โต๊ะ / ออเดอร์ที่ยังไม่ปิดบิล</h2>
+      <div id="billsList"></div>
+    </section>
+
+    <!-- DASHBOARD VIEW -->
+    <section class="view" id="view-dashboard">
+      <h2 class="view-title">สรุปยอดขาย</h2>
+
+      <div class="range-bar" id="rangeBar">
+        <button class="range-btn active" data-range="today">วันนี้</button>
+        <button class="range-btn" data-range="7d">7 วันล่าสุด</button>
+        <button class="range-btn" data-range="30d">30 วันล่าสุด</button>
+        <button class="range-btn" data-range="custom">กำหนดเอง</button>
+      </div>
+      <div class="range-custom hidden" id="rangeCustom">
+        <div class="field"><label>จากวันที่</label><input type="date" id="rangeFrom"></div>
+        <div class="field"><label>ถึงวันที่</label><input type="date" id="rangeTo"></div>
+      </div>
+      <div class="range-label" id="rangeLabel"></div>
+
+      <div class="stat-grid">
+        <div class="stat-tile">
+          <div class="label">ยอดขาย</div>
+          <div class="value" id="statRevenue">฿0</div>
+          <div class="delta" id="statOrders">0 ออเดอร์</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">ต้นทุนวัตถุดิบ</div>
+          <div class="value" id="statCogs">฿0</div>
+          <div class="delta">จากเมนูที่ขายได้</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">รายจ่ายอื่นๆ</div>
+          <div class="value" id="statExpenses">฿0</div>
+          <div class="delta">ค่าเช่า/แรงงาน/อื่นๆ</div>
+        </div>
+        <div class="stat-tile">
+          <div class="label">กำไรสุทธิ</div>
+          <div class="value good" id="statProfit">฿0</div>
+          <div class="delta" id="statMargin">กำไร 0%</div>
+        </div>
+      </div>
+
+      <div class="chip-row">
+        <div class="chip"><div class="c-label">บิลเฉลี่ย</div><div class="c-val" id="statAvg2">฿0</div></div>
+        <div class="chip"><div class="c-label">🍽️ ทานที่ร้าน</div><div class="c-val" id="statDinein">0</div></div>
+        <div class="chip"><div class="c-label">🥡 กลับบ้าน</div><div class="c-val" id="statTakeaway">0</div></div>
+      </div>
+      <div class="chip-row">
+        <div class="chip"><div class="c-label">💵 รับเงินสด</div><div class="c-val" id="statCash">฿0</div></div>
+        <div class="chip"><div class="c-label">📱 รับเงินโอน</div><div class="c-val" id="statTransfer">฿0</div></div>
+      </div>
+
+      <div class="card">
+        <div class="cat-label" style="margin-top:0">เมนูขายดี (จำนวนจาน)</div>
+        <div id="topItems"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="cat-label" style="margin:0;">รายจ่ายในช่วงนี้</div>
+          <button class="add-link" id="addExpenseBtn">+ เพิ่มรายจ่าย</button>
+        </div>
+        <div id="expenseList"></div>
+      </div>
+
+      <div class="card">
+        <div class="cat-label" style="margin-top:0">สรุปย้อนหลังรายวัน (แตะเพื่อดูวันนั้น)</div>
+        <div id="dailyHistory"></div>
+      </div>
+    </section>
+
+    <!-- MENU MANAGEMENT VIEW -->
+    <section class="view" id="view-menu">
+      <h2 class="view-title">จัดการเมนู &amp; ต้นทุน</h2>
+      <div class="card" style="padding:6px 12px;">
+        <div id="menuMgmtList"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="cart-bar">
+    <div class="cart-bar-inner hidden" id="cartBar">
+      <div>
+        <div class="cnt" id="cartCount">0 รายการ</div>
+        <div class="amt" id="cartAmount">฿0</div>
+      </div>
+      <button id="cartGoBtn">ดูออเดอร์ &rsaquo;</button>
+    </div>
+  </div>
+
+  <nav class="tabbar">
+    <div class="inner">
+      <button class="tab-btn active" data-view="order"><span class="ic">🍳</span>ออเดอร์</button>
+      <button class="tab-btn" data-view="bills"><span class="ic">🧾</span>บิล</button>
+      <button class="tab-btn" data-view="dashboard"><span class="ic">📊</span>สรุป</button>
+      <button class="tab-btn" data-view="menu"><span class="ic">🍽️</span>เมนู</button>
+    </div>
+  </nav>
+
+  <button class="fab" id="menuAddFab" style="display:none;">+</button>
+
+  <!-- Order editor sheet -->
+  <div class="overlay hidden" id="orderSheet">
+    <div class="sheet">
+      <div class="sheet-head">
+        <h3>รายการออเดอร์</h3>
+        <button class="close" data-close="orderSheet">✕</button>
+      </div>
+      <div class="sheet-body">
+        <div class="seg-control" id="orderTypeSeg">
+          <button type="button" class="seg-btn active" data-type="dinein">🍽️ ทานที่ร้าน</button>
+          <button type="button" class="seg-btn" data-type="takeaway">🥡 กลับบ้าน</button>
+        </div>
+        <div class="field">
+          <label id="orderTableLabel">หมายเลขโต๊ะ</label>
+          <input type="text" id="orderTableInput" placeholder="เช่น โต๊ะ 3">
+        </div>
+        <div id="orderLines"></div>
+      </div>
+      <div class="sheet-foot">
+        <div class="totals-row grand"><span>ยอดรวม</span><span id="orderTotal">฿0</span></div>
+        <button class="btn-primary" id="confirmOrderBtn">ยืนยันส่งออเดอร์</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bill / checkout sheet -->
+  <div class="overlay hidden" id="billSheet">
+    <div class="sheet">
+      <div class="sheet-head">
+        <h3 id="billTitle">บิล</h3>
+        <button class="close" data-close="billSheet">✕</button>
+      </div>
+      <div class="sheet-body" id="billBody"></div>
+      <div class="sheet-foot">
+        <div class="totals-row grand"><span>ยอดชำระ</span><span id="billTotal">฿0</span></div>
+        <button class="btn-primary" id="payBtn">รับเงิน / ปิดบิล</button>
+        <button class="btn-secondary btn-danger" id="cancelOrderBtn">ยกเลิกออเดอร์นี้</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment sheet -->
+  <div class="overlay hidden" id="paymentSheet">
+    <div class="sheet">
+      <div class="sheet-head">
+        <h3>รับชำระเงิน</h3>
+        <button class="close" data-close="paymentSheet">✕</button>
+      </div>
+      <div class="sheet-body">
+        <div class="totals-row grand" style="border-top:none; margin-top:0; padding-top:0;">
+          <span>ยอดที่ต้องชำระ</span><span id="paymentDueAmt">฿0</span>
+        </div>
+        <div class="seg-control" id="paymentMethodSeg" style="margin-top:16px;">
+          <button type="button" class="seg-btn active" data-method="cash">💵 เงินสด</button>
+          <button type="button" class="seg-btn" data-method="transfer">📱 เงินโอน</button>
+        </div>
+        <div id="cashSection">
+          <div class="field"><label>รับเงินมา (บาท)</label><input type="number" inputmode="decimal" id="cashReceivedInput" placeholder="0"></div>
+          <div class="pay-warning hidden" id="cashWarning"></div>
+          <div class="totals-row grand" id="changeRow"><span>เงินทอน</span><span id="changeAmt">฿0</span></div>
+        </div>
+      </div>
+      <div class="sheet-foot">
+        <button class="btn-primary" id="confirmPaymentBtn" disabled>ยืนยันรับเงิน</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick add-on picker (shown right after tapping a rice/gap-khaao dish) -->
+  <div class="overlay hidden" id="quickAddonSheet">
+    <div class="sheet">
+      <div class="sheet-head">
+        <h3 id="quickAddonTitle">เลือกไข่</h3>
+        <button class="close" data-close="quickAddonSheet">✕</button>
+      </div>
+      <div class="sheet-body" id="quickAddonButtons"></div>
+    </div>
+  </div>
+
+  <!-- Menu item editor sheet -->
+  <div class="overlay hidden" id="itemSheet">
+    <div class="sheet">
+      <div class="sheet-head">
+        <h3 id="itemSheetTitle">แก้ไขเมนู</h3>
+        <button class="close" data-close="itemSheet">✕</button>
+      </div>
+      <div class="sheet-body">
+        <div class="field"><label>ชื่อเมนู</label><input type="text" id="itemNameInput"></div>
+        <div class="field">
+          <label>หมวดหมู่</label>
+          <select id="itemCatInput">
+            <option value="จานเดียว">อาหารจานเดียว</option>
+            <option value="กับข้าว">กับข้าว</option>
+            <option value="เครื่องดื่ม">เครื่องดื่ม</option>
+            <option value="เพิ่มเติม">เพิ่มเติม (ข้าว/ของเสริม)</option>
+          </select>
+        </div>
+        <div class="field"><label>ราคาขาย (บาท)</label><input type="number" inputmode="decimal" id="itemPriceInput"></div>
+        <div class="field"><label>ต้นทุนต่อจาน (บาท)</label><input type="number" inputmode="decimal" id="itemCostInput"></div>
+      </div>
+      <div class="sheet-foot">
+        <button class="btn-primary" id="saveItemBtn">บันทึก</button>
+        <button class="btn-secondary btn-danger" id="deleteItemBtn">ลบเมนูนี้</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expense editor sheet -->
+  <div class="overlay hidden" id="expenseSheet">
+    <div class="sheet">
+      <div class="sheet-head">
+        <h3>เพิ่มรายจ่าย</h3>
+        <button class="close" data-close="expenseSheet">✕</button>
+      </div>
+      <div class="sheet-body">
+        <div class="field"><label>วันที่</label><input type="date" id="expDateInput"></div>
+        <div class="field">
+          <label>หมวดหมู่</label>
+          <select id="expCatInput">
+            <option>วัตถุดิบเพิ่มเติม</option>
+            <option>ค่าเช่า</option>
+            <option>ค่าแรงพนักงาน</option>
+            <option>ค่าน้ำ-ไฟ-แก๊ส</option>
+            <option>ค่าเดินทาง/ขนส่ง</option>
+            <option>อื่นๆ</option>
+          </select>
+        </div>
+        <div class="field"><label>จำนวนเงิน (บาท)</label><input type="number" inputmode="decimal" id="expAmountInput"></div>
+        <div class="field"><label>รายละเอียด (ถ้ามี)</label><input type="text" id="expNoteInput" placeholder="เช่น ซื้อหมูเพิ่ม, ค่าแก๊สหุงต้ม"></div>
+      </div>
+      <div class="sheet-foot">
+        <button class="btn-primary" id="saveExpenseBtn">บันทึกรายจ่าย</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+
+</div>
+
+<script>
+(function () {
+  // ---------- In-memory demo data (resets on reload — this is a preview build) ----------
+  var menu = [
+    { id: 1, name: 'ผัดกะเพราหมูสับ',        cat: 'จานเดียว', price: 50, cost: 22 },
+    { id: 2, name: 'ผัดกะเพราหมูสับ+ไข่ดาว',  cat: 'จานเดียว', price: 60, cost: 27 },
+    { id: 3, name: 'ข้าวผัดกุ้ง',              cat: 'จานเดียว', price: 60, cost: 28 },
+    { id: 4, name: 'ผัดซีอิ๊วหมู',             cat: 'จานเดียว', price: 50, cost: 20 },
+    { id: 5, name: 'ราดหน้าหมู',               cat: 'จานเดียว', price: 50, cost: 22 },
+    { id: 6, name: 'ผัดไทยกุ้งสด',             cat: 'จานเดียว', price: 60, cost: 25 },
+    { id: 7, name: 'ต้มยำกุ้งน้ำข้น',          cat: 'กับข้าว',  price: 80, cost: 35 },
+    { id: 8, name: 'ไข่เจียวหมูสับ',           cat: 'กับข้าว',  price: 40, cost: 15 },
+    { id: 9, name: 'ผัดผักบุ้งไฟแดง',          cat: 'กับข้าว',  price: 40, cost: 15 },
+    { id: 10, name: 'ข้าวเปล่า',                cat: 'เพิ่มเติม', price: 10, cost: 4 },
+    { id: 11, name: 'น้ำเปล่า',                 cat: 'เครื่องดื่ม', price: 10, cost: 3 },
+    { id: 12, name: 'ชาเย็น',                   cat: 'เครื่องดื่ม', price: 25, cost: 9 }
+  ];
+  var nextMenuId = 13;
+  var ADDONS = [
+    { key: 'egg_fried', label: 'ไข่ดาว', price: 10, cost: 4 },
+    { key: 'egg_soft', label: 'ไข่ข้น', price: 10, cost: 4 },
+    { key: 'egg_boiled', label: 'ไข่ต้ม', price: 10, cost: 4 }
+  ];
+  var orders = [];      // {id, table, orderType:'dinein'|'takeaway', items:[{menuId,name,basePrice,baseCost,addon,qty}], status:'open'|'paid', createdAt, paidAt, paymentMethod, cashReceived, change}
+  var nextOrderId = 1;
+  var expenses = [];    // {id, date, cat, note, amount}
+  var nextExpenseId = 1;
+
+  // cart = currently-building order (before it's sent)
+  var cart = [];
+  var orderType = 'dinein';
+  var activeBillOrderId = null;
+  var editingMenuItemId = null;
+  var currentRange = null; // set in init
+  var paymentMethod = 'cash';
+
+  var fmt = function (n) { return (n < 0 ? '-฿' : '฿') + Math.abs(Math.round(n)).toLocaleString('th-TH'); };
+
+  // ---------- Add-on / line-item helpers ----------
+  function addonInfo(key) { return ADDONS.find(function (a) { return a.key === key; }); }
+  function unitPrice(l) { var a = addonInfo(l.addon); return l.basePrice + (a ? a.price : 0); }
+  function unitCost(l) { var a = addonInfo(l.addon); return l.baseCost + (a ? a.cost : 0); }
+  function displayName(l) { var a = addonInfo(l.addon); return l.name + (a ? ' (' + a.label + ')' : ''); }
+
+  // ---------- Date helpers ----------
+  function startOfDay(d) { var x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
+  function addDays(d, n) { var x = new Date(d); x.setDate(x.getDate() + n); return x; }
+  function dateKey(d) { var x = startOfDay(d); return x.getFullYear() + '-' + (x.getMonth() + 1) + '-' + x.getDate(); }
+  function fmtDateShort(d) { return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }); }
+  function toDateInputValue(d) {
+    var x = new Date(d); var off = x.getTimezoneOffset();
+    x = new Date(x.getTime() - off * 60000);
+    return x.toISOString().slice(0, 10);
+  }
+
+  // ---------- Nav ----------
+  var views = ['order', 'bills', 'dashboard', 'menu'];
+  document.querySelectorAll('.tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { showView(btn.dataset.view); });
+  });
+  function showView(name) {
+    views.forEach(function (v) {
+      document.getElementById('view-' + v).classList.toggle('active', v === name);
+    });
+    document.querySelectorAll('.tab-btn').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.view === name);
+    });
+    document.getElementById('menuAddFab').style.display = (name === 'menu') ? 'block' : 'none';
+    if (name === 'bills') renderBills();
+    if (name === 'dashboard') renderDashboard();
+    if (name === 'menu') renderMenuMgmt();
+  }
+
+  // ---------- Render: order/menu picker ----------
+  var EGG_CATS = ['จานเดียว', 'กับข้าว'];
+
+  document.getElementById('menuSearchInput').addEventListener('input', function () {
+    renderMenuList(this.value.trim());
+  });
+
+  function renderMenuList(filterText) {
+    var wrap = document.getElementById('menuList');
+    wrap.innerHTML = '';
+    var q = (filterText || '').toLowerCase();
+    var cats = [];
+    menu.forEach(function (m) { if (cats.indexOf(m.cat) === -1) cats.push(m.cat); });
+    var anyShown = false;
+    cats.forEach(function (cat) {
+      var catItems = menu.filter(function (m) { return m.cat === cat && (!q || m.name.toLowerCase().indexOf(q) !== -1); });
+      if (catItems.length === 0) return;
+      anyShown = true;
+      var label = document.createElement('div');
+      label.className = 'cat-label';
+      label.textContent = cat;
+      wrap.appendChild(label);
+      var grid = document.createElement('div');
+      grid.className = 'menu-grid';
+      catItems.forEach(function (m) {
+        var el = document.createElement('button');
+        el.className = 'menu-item';
+        el.innerHTML = '<span class="name">' + m.name + '</span><span class="price">' + fmt(m.price) + '</span>';
+        el.addEventListener('click', function () {
+          if (EGG_CATS.indexOf(m.cat) !== -1) openQuickAddonSheet(m);
+          else { addToCart(m); showToast('+1 ' + m.name); }
+        });
+        grid.appendChild(el);
+      });
+      wrap.appendChild(grid);
+    });
+    if (!anyShown) {
+      wrap.innerHTML = '<div class="empty-state">ไม่พบเมนูที่ค้นหา</div>';
+    }
+  }
+
+  function addToCart(m, addon) {
+    addon = addon || null;
+    var line = cart.find(function (l) { return l.menuId === m.id && l.addon === addon; });
+    if (line) line.qty += 1;
+    else cart.push({ menuId: m.id, name: m.name, basePrice: m.price, baseCost: m.cost, addon: addon, qty: 1 });
+    renderCartBar();
+  }
+
+  function cartTotal() { return cart.reduce(function (s, l) { return s + unitPrice(l) * l.qty; }, 0); }
+  function cartCount() { return cart.reduce(function (s, l) { return s + l.qty; }, 0); }
+
+  // ---------- Quick add-on picker (shown right after tapping a dish) ----------
+  function openQuickAddonSheet(m) {
+    document.getElementById('quickAddonTitle').textContent = m.name + ' · เลือกไข่';
+    var wrap = document.getElementById('quickAddonButtons');
+    wrap.innerHTML = '';
+    var noneBtn = document.createElement('button');
+    noneBtn.type = 'button';
+    noneBtn.className = 'quick-addon-btn';
+    noneBtn.innerHTML = '<span>ไม่เพิ่มไข่</span><span>' + fmt(m.price) + '</span>';
+    noneBtn.addEventListener('click', function () {
+      addToCart(m, null);
+      closeOverlay('quickAddonSheet');
+      showToast('+1 ' + m.name);
+    });
+    wrap.appendChild(noneBtn);
+    ADDONS.forEach(function (a) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'quick-addon-btn';
+      btn.innerHTML = '<span>🥚 ' + a.label + '</span><span class="plus">+' + a.price + '</span>';
+      btn.addEventListener('click', function () {
+        addToCart(m, a.key);
+        closeOverlay('quickAddonSheet');
+        showToast('+1 ' + m.name + ' (' + a.label + ')');
+      });
+      wrap.appendChild(btn);
+    });
+    document.getElementById('quickAddonSheet').classList.remove('hidden');
+  }
+
+  function renderCartBar() {
+    var bar = document.getElementById('cartBar');
+    var n = cartCount();
+    if (n === 0) { bar.classList.add('hidden'); return; }
+    bar.classList.remove('hidden');
+    document.getElementById('cartCount').textContent = n + ' รายการ';
+    document.getElementById('cartAmount').textContent = fmt(cartTotal());
+  }
+
+  document.getElementById('cartGoBtn').addEventListener('click', openOrderSheet);
+
+  function openOrderSheet() {
+    renderOrderLines();
+    document.getElementById('orderTotal').textContent = fmt(cartTotal());
+    document.getElementById('orderSheet').classList.remove('hidden');
+  }
+
+  function renderOrderLines() {
+    var wrap = document.getElementById('orderLines');
+    wrap.innerHTML = '';
+    if (cart.length === 0) {
+      wrap.innerHTML = '<div class="empty-state">ยังไม่มีรายการ แตะเมนูด้านหลังเพื่อเพิ่ม</div>';
+      return;
+    }
+    cart.forEach(function (l, idx) {
+      var row = document.createElement('div');
+      row.className = 'cart-line';
+      var up = unitPrice(l);
+      var top = document.createElement('div');
+      top.className = 'cart-line-top';
+      top.innerHTML =
+        '<div><div class="li-name">' + l.name + (l.addon ? ' <span style="color:var(--series-1);">(' + addonInfo(l.addon).label + ')</span>' : '') + '</div><div class="li-price">' + fmt(up) + ' / จาน</div></div>' +
+        '<div class="qty-ctl">' +
+          '<button data-act="minus">−</button>' +
+          '<span class="q">' + l.qty + '</span>' +
+          '<button data-act="plus">+</button>' +
+        '</div>' +
+        '<div class="li-total">' + fmt(up * l.qty) + '</div>';
+      top.querySelector('[data-act="minus"]').addEventListener('click', function () {
+        l.qty -= 1;
+        if (l.qty <= 0) cart.splice(idx, 1);
+        renderOrderLines();
+        renderCartBar();
+        document.getElementById('orderTotal').textContent = fmt(cartTotal());
+      });
+      top.querySelector('[data-act="plus"]').addEventListener('click', function () {
+        l.qty += 1;
+        renderOrderLines();
+        renderCartBar();
+        document.getElementById('orderTotal').textContent = fmt(cartTotal());
+      });
+      row.appendChild(top);
+
+      var addonWrap = document.createElement('div');
+      addonWrap.className = 'addon-row';
+      addonWrap.appendChild(makeAddonPill('ไม่เพิ่มไข่', !l.addon, function () {
+        l.addon = null; renderOrderLines(); renderCartBar();
+        document.getElementById('orderTotal').textContent = fmt(cartTotal());
+      }));
+      ADDONS.forEach(function (a) {
+        addonWrap.appendChild(makeAddonPill('🥚 ' + a.label + ' +' + a.price, l.addon === a.key, function () {
+          l.addon = a.key; renderOrderLines(); renderCartBar();
+          document.getElementById('orderTotal').textContent = fmt(cartTotal());
+        }));
+      });
+      row.appendChild(addonWrap);
+
+      wrap.appendChild(row);
+    });
+  }
+
+  function makeAddonPill(label, isActive, onClick) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'addon-pill' + (isActive ? ' active' : '');
+    b.textContent = label;
+    b.addEventListener('click', onClick);
+    return b;
+  }
+
+  // ---------- Order type segmented control ----------
+  document.querySelectorAll('#orderTypeSeg .seg-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      orderType = btn.dataset.type;
+      document.querySelectorAll('#orderTypeSeg .seg-btn').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      var label = document.getElementById('orderTableLabel');
+      var input = document.getElementById('orderTableInput');
+      if (orderType === 'takeaway') { label.textContent = 'ชื่อลูกค้า'; input.placeholder = 'เช่น กลับบ้าน-สมชาย'; }
+      else { label.textContent = 'หมายเลขโต๊ะ'; input.placeholder = 'เช่น โต๊ะ 3'; }
+    });
+  });
+  function resetOrderTypeSeg() {
+    orderType = 'dinein';
+    document.querySelectorAll('#orderTypeSeg .seg-btn').forEach(function (b, i) { b.classList.toggle('active', i === 0); });
+    document.getElementById('orderTableLabel').textContent = 'หมายเลขโต๊ะ';
+    document.getElementById('orderTableInput').placeholder = 'เช่น โต๊ะ 3';
+  }
+
+  document.getElementById('confirmOrderBtn').addEventListener('click', function () {
+    if (cart.length === 0) return;
+    var tableName = document.getElementById('orderTableInput').value.trim() ||
+      (orderType === 'takeaway' ? ('ลูกค้า #' + nextOrderId) : ('โต๊ะ #' + nextOrderId));
+    orders.push({
+      id: nextOrderId++,
+      table: tableName,
+      orderType: orderType,
+      items: cart.map(function (l) { return Object.assign({}, l); }),
+      status: 'open',
+      createdAt: new Date()
+    });
+    cart = [];
+    document.getElementById('orderTableInput').value = '';
+    resetOrderTypeSeg();
+    closeOverlay('orderSheet');
+    renderCartBar();
+    saveState();
+    showView('bills');
+  });
+
+  // ---------- Bills / open orders ----------
+  function renderBills() {
+    var wrap = document.getElementById('billsList');
+    wrap.innerHTML = '';
+    var open = orders.filter(function (o) { return o.status === 'open'; });
+    if (open.length === 0) {
+      wrap.innerHTML = '<div class="empty-state">ยังไม่มีออเดอร์ที่เปิดอยู่<br>ไปที่แท็บ "ออเดอร์" เพื่อเริ่มรับออเดอร์</div>';
+      return;
+    }
+    open.forEach(function (o) {
+      var total = o.items.reduce(function (s, i) { return s + unitPrice(i) * i.qty; }, 0);
+      var qty = o.items.reduce(function (s, i) { return s + i.qty; }, 0);
+      var badge = o.orderType === 'takeaway'
+        ? '<span class="type-badge takeaway">🥡 กลับบ้าน</span>'
+        : '<span class="type-badge dinein">🍽️ ทานที่ร้าน</span>';
+      var card = document.createElement('div');
+      card.className = 'card table-card';
+      card.innerHTML =
+        '<div>' +
+          '<div class="t-name">' + o.table + '</div>' +
+          '<div class="t-meta">' + qty + ' จาน · ' + o.createdAt.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}) + '</div>' +
+          badge +
+          '<div class="go">แตะเพื่อเปิดบิล &rsaquo;</div>' +
+        '</div>' +
+        '<div class="t-amt">' + fmt(total) + '</div>';
+      card.addEventListener('click', function () { openBillSheet(o.id); });
+      wrap.appendChild(card);
+    });
+  }
+
+  function openBillSheet(orderId) {
+    activeBillOrderId = orderId;
+    var o = orders.find(function (x) { return x.id === orderId; });
+    document.getElementById('billTitle').textContent = o.table;
+    var body = document.getElementById('billBody');
+    body.innerHTML = '';
+    var total = 0;
+    o.items.forEach(function (i) {
+      var up = unitPrice(i);
+      total += up * i.qty;
+      var row = document.createElement('div');
+      row.className = 'line-row';
+      row.innerHTML =
+        '<div><div class="li-name">' + displayName(i) + '</div><div class="li-price">' + i.qty + ' × ' + fmt(up) + '</div></div>' +
+        '<div class="li-total">' + fmt(up * i.qty) + '</div>';
+      body.appendChild(row);
+    });
+    document.getElementById('billTotal').textContent = fmt(total);
+    document.getElementById('billSheet').classList.remove('hidden');
+  }
+
+  document.getElementById('cancelOrderBtn').addEventListener('click', function () {
+    orders = orders.filter(function (o) { return o.id !== activeBillOrderId; });
+    closeOverlay('billSheet');
+    renderBills();
+    saveState();
+  });
+
+  // ---------- Payment flow (cash / transfer) ----------
+  function billOrderTotal() {
+    var o = orders.find(function (x) { return x.id === activeBillOrderId; });
+    return o ? o.items.reduce(function (s, i) { return s + unitPrice(i) * i.qty; }, 0) : 0;
+  }
+
+  document.getElementById('payBtn').addEventListener('click', function () {
+    var o = orders.find(function (x) { return x.id === activeBillOrderId; });
+    if (!o) return;
+    var total = billOrderTotal();
+    paymentMethod = 'cash';
+    document.querySelectorAll('#paymentMethodSeg .seg-btn').forEach(function (b, i) { b.classList.toggle('active', i === 0); });
+    document.getElementById('cashSection').classList.remove('hidden');
+    document.getElementById('paymentDueAmt').textContent = fmt(total);
+    document.getElementById('cashReceivedInput').value = '';
+    document.getElementById('cashWarning').classList.add('hidden');
+    document.getElementById('changeRow').classList.remove('bad');
+    document.getElementById('changeAmt').textContent = fmt(0);
+    document.getElementById('confirmPaymentBtn').disabled = true;
+    closeOverlay('billSheet');
+    document.getElementById('paymentSheet').classList.remove('hidden');
+  });
+
+  document.querySelectorAll('#paymentMethodSeg .seg-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      paymentMethod = btn.dataset.method;
+      document.querySelectorAll('#paymentMethodSeg .seg-btn').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      document.getElementById('cashSection').classList.toggle('hidden', paymentMethod !== 'cash');
+      updateConfirmState();
+    });
+  });
+
+  document.getElementById('cashReceivedInput').addEventListener('input', function () { updateChangeDisplay(); });
+
+  function updateChangeDisplay() {
+    var total = billOrderTotal();
+    var received = parseFloat(document.getElementById('cashReceivedInput').value) || 0;
+    var changeRow = document.getElementById('changeRow');
+    var changeAmt = document.getElementById('changeAmt');
+    var warn = document.getElementById('cashWarning');
+    if (received > 0 && received < total) {
+      changeRow.classList.add('bad');
+      changeAmt.textContent = fmt(0);
+      warn.textContent = 'รับเงินมาไม่พอ ขาดอีก ' + fmt(total - received);
+      warn.classList.remove('hidden');
+    } else {
+      changeRow.classList.remove('bad');
+      changeAmt.textContent = fmt(Math.max(0, received - total));
+      warn.classList.add('hidden');
+    }
+    updateConfirmState();
+  }
+
+  function updateConfirmState() {
+    var btn = document.getElementById('confirmPaymentBtn');
+    if (paymentMethod === 'transfer') { btn.disabled = false; return; }
+    var total = billOrderTotal();
+    var received = parseFloat(document.getElementById('cashReceivedInput').value) || 0;
+    btn.disabled = received < total;
+  }
+
+  document.getElementById('confirmPaymentBtn').addEventListener('click', function () {
+    var o = orders.find(function (x) { return x.id === activeBillOrderId; });
+    if (!o) return;
+    var total = billOrderTotal();
+    var received = paymentMethod === 'cash' ? (parseFloat(document.getElementById('cashReceivedInput').value) || 0) : total;
+    if (paymentMethod === 'cash' && received < total) return;
+    o.status = 'paid';
+    o.paidAt = new Date();
+    o.paymentMethod = paymentMethod;
+    if (paymentMethod === 'cash') { o.cashReceived = received; o.change = received - total; }
+    closeOverlay('paymentSheet');
+    renderBills();
+    saveState();
+    showToast(paymentMethod === 'cash'
+      ? ('ปิดบิลแล้ว · เงินทอน ' + fmt(Math.max(0, received - total)))
+      : 'ปิดบิลแล้ว · ชำระผ่านเงินโอน');
+  });
+
+  var toastTimer;
+  function showToast(msg) {
+    var el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.remove('hidden');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.add('hidden'); }, 2600);
+  }
+
+  // ---------- Dashboard: range selector ----------
+  document.querySelectorAll('.range-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var type = btn.dataset.range;
+      document.querySelectorAll('.range-btn').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      var today = startOfDay(new Date());
+      var customBox = document.getElementById('rangeCustom');
+      if (type === 'today') { currentRange = { from: today, to: addDays(today, 1) }; customBox.classList.add('hidden'); }
+      else if (type === '7d') { currentRange = { from: addDays(today, -6), to: addDays(today, 1) }; customBox.classList.add('hidden'); }
+      else if (type === '30d') { currentRange = { from: addDays(today, -29), to: addDays(today, 1) }; customBox.classList.add('hidden'); }
+      else if (type === 'custom') {
+        customBox.classList.remove('hidden');
+        updateCustomRange();
+        return;
+      }
+      renderDashboardStats();
+    });
+  });
+  function updateCustomRange() {
+    var f = document.getElementById('rangeFrom').value;
+    var t = document.getElementById('rangeTo').value;
+    if (!f || !t) return;
+    currentRange = { from: startOfDay(new Date(f)), to: addDays(startOfDay(new Date(t)), 1) };
+    renderDashboardStats();
+  }
+  document.getElementById('rangeFrom').addEventListener('change', updateCustomRange);
+  document.getElementById('rangeTo').addEventListener('change', updateCustomRange);
+
+  function renderDashboard() {
+    renderDashboardStats();
+    renderDailyHistory();
+  }
+
+  function renderDashboardStats() {
+    var oneDay = 24 * 60 * 60 * 1000;
+    var numDays = Math.round((currentRange.to - currentRange.from) / oneDay);
+    var label = numDays <= 1
+      ? 'แสดงผลวันที่ ' + fmtDateShort(currentRange.from)
+      : 'แสดงผล ' + fmtDateShort(currentRange.from) + ' – ' + fmtDateShort(addDays(currentRange.to, -1)) + ' (' + numDays + ' วัน)';
+    document.getElementById('rangeLabel').textContent = label;
+
+    var paidInRange = orders.filter(function (o) {
+      if (o.status !== 'paid') return false;
+      var t = o.paidAt || o.createdAt;
+      return t >= currentRange.from && t < currentRange.to;
+    });
+    var revenue = 0, cogs = 0, dishCount = {}, dineinCount = 0, takeawayCount = 0, cashTotal = 0, transferTotal = 0;
+    paidInRange.forEach(function (o) {
+      if (o.orderType === 'takeaway') takeawayCount++; else dineinCount++;
+      var orderRevenue = 0;
+      o.items.forEach(function (i) {
+        var lineRevenue = unitPrice(i) * i.qty;
+        revenue += lineRevenue;
+        orderRevenue += lineRevenue;
+        cogs += unitCost(i) * i.qty;
+        var dn = displayName(i);
+        dishCount[dn] = (dishCount[dn] || 0) + i.qty;
+      });
+      if (o.paymentMethod === 'transfer') transferTotal += orderRevenue;
+      else cashTotal += orderRevenue; // treat unspecified (e.g. still-open legacy demo data) as cash
+    });
+    var expInRange = expenses.filter(function (e) { return e.date >= currentRange.from && e.date < currentRange.to; });
+    var expTotal = expInRange.reduce(function (s, e) { return s + e.amount; }, 0);
+    var profit = revenue - cogs - expTotal;
+    var margin = revenue > 0 ? Math.round((profit / revenue) * 100) : 0;
+    var avg = paidInRange.length > 0 ? revenue / paidInRange.length : 0;
+
+    document.getElementById('statRevenue').textContent = fmt(revenue);
+    document.getElementById('statOrders').textContent = paidInRange.length + ' ออเดอร์ที่ปิดบิลแล้ว';
+    document.getElementById('statCogs').textContent = fmt(cogs);
+    document.getElementById('statExpenses').textContent = fmt(expTotal);
+    var profitEl = document.getElementById('statProfit');
+    profitEl.textContent = fmt(profit);
+    profitEl.classList.toggle('good', profit >= 0);
+    profitEl.classList.toggle('bad', profit < 0);
+    document.getElementById('statMargin').textContent = 'กำไร ' + margin + '% ของยอดขาย';
+    document.getElementById('statCash').textContent = fmt(cashTotal);
+    document.getElementById('statTransfer').textContent = fmt(transferTotal);
+    document.getElementById('statAvg2').textContent = fmt(avg);
+    document.getElementById('statDinein').textContent = dineinCount;
+    document.getElementById('statTakeaway').textContent = takeawayCount;
+
+    var top = Object.keys(dishCount).map(function (k) { return { name: k, qty: dishCount[k] }; })
+      .sort(function (a, b) { return b.qty - a.qty; }).slice(0, 5);
+    var topWrap = document.getElementById('topItems');
+    topWrap.innerHTML = '';
+    if (top.length === 0) {
+      topWrap.innerHTML = '<div class="empty-state" style="padding:16px 0;">ยังไม่มีบิลที่ปิดในช่วงนี้</div>';
+    } else {
+      var max = top[0].qty;
+      top.forEach(function (t) {
+        var row = document.createElement('div');
+        row.className = 'bar-row';
+        var pct = Math.max(6, Math.round((t.qty / max) * 100));
+        row.innerHTML =
+          '<div class="b-label">' + t.name + '</div>' +
+          '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+          '<div class="b-val">' + t.qty + '</div>';
+        topWrap.appendChild(row);
+      });
+    }
+
+    var expWrap = document.getElementById('expenseList');
+    expWrap.innerHTML = '';
+    var sortedExp = expInRange.slice().sort(function (a, b) { return b.date - a.date; });
+    if (sortedExp.length === 0) {
+      expWrap.innerHTML = '<div class="empty-state" style="padding:16px 0;">ยังไม่มีรายจ่ายในช่วงนี้</div>';
+    } else {
+      sortedExp.forEach(function (e) {
+        var row = document.createElement('div');
+        row.className = 'exp-row';
+        row.innerHTML =
+          '<div class="e-info">' +
+            '<div class="e-cat">' + e.cat + '</div>' +
+            '<div class="e-meta">' + fmtDateShort(e.date) + (e.note ? ' · ' + e.note : '') + '</div>' +
+          '</div>' +
+          '<div class="e-amt">' + fmt(e.amount) + '</div>' +
+          '<button class="e-del" title="ลบ">✕</button>';
+        row.querySelector('.e-del').addEventListener('click', function () {
+          expenses = expenses.filter(function (x) { return x.id !== e.id; });
+          renderDashboard();
+          saveState();
+        });
+        expWrap.appendChild(row);
+      });
+    }
+  }
+
+  function buildDailyMap() {
+    var map = {};
+    orders.filter(function (o) { return o.status === 'paid'; }).forEach(function (o) {
+      var d = startOfDay(o.paidAt || o.createdAt);
+      var key = dateKey(d);
+      if (!map[key]) map[key] = { date: d, revenue: 0, cogs: 0, expenses: 0 };
+      o.items.forEach(function (i) { map[key].revenue += unitPrice(i) * i.qty; map[key].cogs += unitCost(i) * i.qty; });
+    });
+    expenses.forEach(function (e) {
+      var key = dateKey(e.date);
+      if (!map[key]) map[key] = { date: startOfDay(e.date), revenue: 0, cogs: 0, expenses: 0 };
+      map[key].expenses += e.amount;
+    });
+    return map;
+  }
+
+  function renderDailyHistory() {
+    var map = buildDailyMap();
+    var days = Object.keys(map).map(function (k) { return map[k]; })
+      .sort(function (a, b) { return b.date - a.date; }).slice(0, 14);
+    var wrap = document.getElementById('dailyHistory');
+    wrap.innerHTML = '';
+    if (days.length === 0) {
+      wrap.innerHTML = '<div class="empty-state" style="padding:16px 0;">ยังไม่มีข้อมูลย้อนหลัง</div>';
+      return;
+    }
+    days.forEach(function (d) {
+      var profit = d.revenue - d.cogs - d.expenses;
+      var row = document.createElement('div');
+      row.className = 'hist-row';
+      row.innerHTML =
+        '<div><div class="h-date">' + fmtDateShort(d.date) + '</div><div class="h-sub">ขาย ' + fmt(d.revenue) + ' · จ่าย ' + fmt(d.cogs + d.expenses) + '</div></div>' +
+        '<div class="h-profit ' + (profit >= 0 ? 'pos' : 'neg') + '">' + fmt(profit) + '</div>';
+      row.addEventListener('click', function () {
+        currentRange = { from: d.date, to: addDays(d.date, 1) };
+        document.querySelectorAll('.range-btn').forEach(function (b) { b.classList.remove('active'); });
+        document.getElementById('rangeCustom').classList.add('hidden');
+        renderDashboardStats();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      wrap.appendChild(row);
+    });
+  }
+
+  // ---------- Expense sheet ----------
+  document.getElementById('addExpenseBtn').addEventListener('click', function () {
+    document.getElementById('expDateInput').value = toDateInputValue(new Date());
+    document.getElementById('expCatInput').selectedIndex = 0;
+    document.getElementById('expAmountInput').value = '';
+    document.getElementById('expNoteInput').value = '';
+    document.getElementById('expenseSheet').classList.remove('hidden');
+  });
+  document.getElementById('saveExpenseBtn').addEventListener('click', function () {
+    var dateVal = document.getElementById('expDateInput').value;
+    var cat = document.getElementById('expCatInput').value;
+    var amount = parseFloat(document.getElementById('expAmountInput').value) || 0;
+    var note = document.getElementById('expNoteInput').value.trim();
+    if (!dateVal || amount <= 0) return;
+    expenses.push({ id: nextExpenseId++, date: startOfDay(new Date(dateVal)), cat: cat, note: note, amount: amount });
+    closeOverlay('expenseSheet');
+    renderDashboard();
+    saveState();
+  });
+
+  // ---------- Menu management ----------
+  function renderMenuMgmt() {
+    var wrap = document.getElementById('menuMgmtList');
+    wrap.innerHTML = '';
+    menu.forEach(function (m) {
+      var margin = m.price > 0 ? Math.round(((m.price - m.cost) / m.price) * 100) : 0;
+      var row = document.createElement('div');
+      row.className = 'menu-row';
+      row.innerHTML =
+        '<div class="m-info">' +
+          '<div class="m-name">' + m.name + '</div>' +
+          '<div class="m-meta">ขาย ' + fmt(m.price) + ' · ต้นทุน ' + fmt(m.cost) + ' · <span class="m-margin">กำไร ' + margin + '%</span></div>' +
+        '</div>' +
+        '<button class="edit-btn">แก้ไข</button>';
+      row.querySelector('.edit-btn').addEventListener('click', function () { openItemSheet(m.id); });
+      wrap.appendChild(row);
+    });
+  }
+
+  document.getElementById('menuAddFab').addEventListener('click', function () { openItemSheet(null); });
+
+  function openItemSheet(id) {
+    editingMenuItemId = id;
+    var m = id ? menu.find(function (x) { return x.id === id; }) : { name: '', cat: 'จานเดียว', price: '', cost: '' };
+    document.getElementById('itemSheetTitle').textContent = id ? 'แก้ไขเมนู' : 'เพิ่มเมนูใหม่';
+    document.getElementById('itemNameInput').value = m.name;
+    document.getElementById('itemCatInput').value = m.cat;
+    document.getElementById('itemPriceInput').value = m.price;
+    document.getElementById('itemCostInput').value = m.cost;
+    document.getElementById('deleteItemBtn').style.display = id ? 'block' : 'none';
+    document.getElementById('itemSheet').classList.remove('hidden');
+  }
+
+  document.getElementById('saveItemBtn').addEventListener('click', function () {
+    var name = document.getElementById('itemNameInput').value.trim();
+    var cat = document.getElementById('itemCatInput').value;
+    var price = parseFloat(document.getElementById('itemPriceInput').value) || 0;
+    var cost = parseFloat(document.getElementById('itemCostInput').value) || 0;
+    if (!name) return;
+    if (editingMenuItemId) {
+      var m = menu.find(function (x) { return x.id === editingMenuItemId; });
+      m.name = name; m.cat = cat; m.price = price; m.cost = cost;
+    } else {
+      menu.push({ id: nextMenuId++, name: name, cat: cat, price: price, cost: cost });
+    }
+    closeOverlay('itemSheet');
+    renderMenuMgmt();
+    renderMenuList();
+    saveState();
+  });
+
+  document.getElementById('deleteItemBtn').addEventListener('click', function () {
+    menu = menu.filter(function (x) { return x.id !== editingMenuItemId; });
+    closeOverlay('itemSheet');
+    renderMenuMgmt();
+    saveState();
+    renderMenuList();
+  });
+
+  // ---------- Overlay helpers ----------
+  document.querySelectorAll('[data-close]').forEach(function (btn) {
+    btn.addEventListener('click', function () { closeOverlay(btn.dataset.close); });
+  });
+  document.querySelectorAll('.overlay').forEach(function (ov) {
+    ov.addEventListener('click', function (e) { if (e.target === ov) closeOverlay(ov.id); });
+  });
+  function closeOverlay(id) { document.getElementById(id).classList.add('hidden'); }
+
+  // ---------- Persistent storage (this device only) ----------
+  var STORAGE_KEY = 'laksi_pos_state_v1';
+  var storageOk = true;
+
+  function saveState() {
+    if (!storageOk) return;
+    try {
+      var state = {
+        menu: menu,
+        orders: orders.map(function (o) {
+          return Object.assign({}, o, {
+            createdAt: o.createdAt ? o.createdAt.toISOString() : null,
+            paidAt: o.paidAt ? o.paidAt.toISOString() : null
+          });
+        }),
+        expenses: expenses.map(function (e) {
+          return Object.assign({}, e, { date: e.date.toISOString() });
+        }),
+        nextMenuId: nextMenuId,
+        nextOrderId: nextOrderId,
+        nextExpenseId: nextExpenseId
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      setSaveBadge(true);
+    } catch (e) {
+      storageOk = false;
+      setSaveBadge(false);
+    }
+  }
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      var state = JSON.parse(raw);
+      if (state.menu && state.menu.length) menu = state.menu;
+      if (state.orders) {
+        orders = state.orders.map(function (o) {
+          return Object.assign({}, o, {
+            createdAt: o.createdAt ? new Date(o.createdAt) : new Date(),
+            paidAt: o.paidAt ? new Date(o.paidAt) : null
+          });
+        });
+      }
+      if (state.expenses) {
+        expenses = state.expenses.map(function (e) {
+          return Object.assign({}, e, { date: new Date(e.date) });
+        });
+      }
+      nextMenuId = state.nextMenuId || nextMenuId;
+      nextOrderId = state.nextOrderId || nextOrderId;
+      nextExpenseId = state.nextExpenseId || nextExpenseId;
+    } catch (e) {
+      // ignore corrupted/unavailable storage — app still works, just starts empty
+    }
+  }
+
+  function setSaveBadge(ok) {
+    var el = document.getElementById('saveBadge');
+    if (!el) return;
+    if (ok) {
+      el.textContent = '✓ บันทึกอัตโนมัติในเครื่องนี้';
+      el.classList.remove('warn');
+    } else {
+      el.textContent = '⚠ บันทึกอัตโนมัติไม่สำเร็จ (พื้นที่เก็บข้อมูลเบราว์เซอร์ไม่พร้อมใช้งาน)';
+      el.classList.add('warn');
+    }
+  }
+
+  // ---------- Init ----------
+  loadState();
+  var todayStart = startOfDay(new Date());
+  currentRange = { from: todayStart, to: addDays(todayStart, 1) };
+  document.getElementById('rangeFrom').value = toDateInputValue(todayStart);
+  document.getElementById('rangeTo').value = toDateInputValue(todayStart);
+  document.getElementById('todayLabel').textContent = new Date().toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  setSaveBadge(true);
+  renderMenuList();
+  renderCartBar();
+})();
+</script>
+</body>
+</html>
