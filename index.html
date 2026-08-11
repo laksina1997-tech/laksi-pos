@@ -121,8 +121,14 @@
     flex: 1; background: none; border: none; padding: 8px 0 10px; display: flex; flex-direction: column;
     align-items: center; gap: 2px; font-family: inherit; color: var(--text-muted); font-size: 10.5px; font-weight: 600;
   }
-  nav.tabbar button .ic { font-size: 19px; line-height: 1; }
+  nav.tabbar button .ic { font-size: 19px; line-height: 1; position: relative; display: inline-block; }
   nav.tabbar button.active { color: var(--series-1); }
+  .tab-badge {
+    position: absolute; top: -6px; right: -10px; min-width: 16px; height: 16px; padding: 0 4px;
+    border-radius: 999px; background: #d64545; color: #fff; font-size: 10px; font-weight: 700;
+    line-height: 16px; text-align: center;
+  }
+  .tab-badge.hidden { display: none; }
 
   /* ---- Modal (order editor / bill) ---- */
   .overlay {
@@ -247,6 +253,16 @@
   .type-badge { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 999px; margin-top: 4px; }
   .type-badge.dinein { background: #e3efe6; color: var(--series-1); }
   .type-badge.takeaway { background: #f7ecd7; color: var(--series-2); }
+  .serve-btn {
+    display: inline-block; margin-top: 7px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--series-1);
+    background: var(--page-plane); color: var(--series-1); font-size: 11.5px; font-weight: 700; font-family: inherit;
+  }
+  .serve-btn:active { background: var(--series-1); color: #fff; }
+  .served-badge {
+    display: inline-block; margin-top: 7px; padding: 5px 10px; border-radius: 8px; border: none;
+    background: #e3efe6; color: var(--series-1); font-size: 11.5px; font-weight: 700; font-family: inherit;
+  }
+  .table-card.is-served { opacity: 0.72; }
 
   /* ---- Dashboard ---- */
   .range-bar { display: flex; gap: 6px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 2px; }
@@ -453,7 +469,7 @@
   <nav class="tabbar">
     <div class="inner">
       <button class="tab-btn active" data-view="order"><span class="ic">🍳</span>ออเดอร์</button>
-      <button class="tab-btn" data-view="bills"><span class="ic">🧾</span>บิล</button>
+      <button class="tab-btn" data-view="bills"><span class="ic">🧾<span class="tab-badge hidden" id="billsBadge">0</span></span>บิล</button>
       <button class="tab-btn" data-view="dashboard"><span class="ic">📊</span>สรุป</button>
       <button class="tab-btn" data-view="menu"><span class="ic">🍽️</span>เมนู</button>
     </div>
@@ -927,6 +943,7 @@
       orderType: orderType,
       items: cart.map(function (l) { return Object.assign({}, l); }),
       status: 'open',
+      served: false,
       createdAt: new Date()
     });
     cart = [];
@@ -939,7 +956,56 @@
   });
 
   // ---------- Bills / open orders ----------
+  function updateBillsBadge() {
+    var badge = document.getElementById('billsBadge');
+    if (!badge) return;
+    var openCount = orders.filter(function (o) { return o.status === 'open'; }).length;
+    if (openCount > 0) {
+      badge.textContent = openCount > 99 ? '99+' : String(openCount);
+      badge.classList.remove('hidden');
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+
+  function toggleServed(orderId) {
+    var o = orders.find(function (x) { return x.id === orderId; });
+    if (!o) return;
+    o.served = !o.served;
+    saveState();
+    renderBills();
+  }
+
+  function buildBillCard(o) {
+    var total = o.items.reduce(function (s, i) { return s + unitPrice(i) * i.qty; }, 0);
+    var qty = o.items.reduce(function (s, i) { return s + i.qty; }, 0);
+    var typeBadge = o.orderType === 'takeaway'
+      ? '<span class="type-badge takeaway">🥡 กลับบ้าน</span>'
+      : '<span class="type-badge dinein">🍽️ ทานที่ร้าน</span>';
+    var serveHtml = o.served
+      ? '<button type="button" class="served-badge" data-serve-id="' + o.id + '">✅ เสิร์ฟแล้ว (แตะเพื่อยกเลิก)</button>'
+      : '<button type="button" class="serve-btn" data-serve-id="' + o.id + '">🍽️ กดเมื่อเสิร์ฟแล้ว</button>';
+    var card = document.createElement('div');
+    card.className = 'card table-card' + (o.served ? ' is-served' : '');
+    card.innerHTML =
+      '<div>' +
+        '<div class="t-name">' + o.table + '</div>' +
+        '<div class="t-meta">' + qty + ' จาน · ' + o.createdAt.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}) + '</div>' +
+        typeBadge +
+        '<div>' + serveHtml + '</div>' +
+        '<div class="go">แตะเพื่อเปิดบิล &rsaquo;</div>' +
+      '</div>' +
+      '<div class="t-amt">' + fmt(total) + '</div>';
+    card.addEventListener('click', function () { openBillSheet(o.id); });
+    card.querySelector('[data-serve-id]').addEventListener('click', function (ev) {
+      ev.stopPropagation(); // ไม่ให้กดปุ่มนี้แล้วเปิดบิลตามไปด้วย
+      toggleServed(o.id);
+    });
+    return card;
+  }
+
   function renderBills() {
+    updateBillsBadge();
     var wrap = document.getElementById('billsList');
     wrap.innerHTML = '';
     var open = orders.filter(function (o) { return o.status === 'open'; });
@@ -947,25 +1013,22 @@
       wrap.innerHTML = '<div class="empty-state">ยังไม่มีออเดอร์ที่เปิดอยู่<br>ไปที่แท็บ "ออเดอร์" เพื่อเริ่มรับออเดอร์</div>';
       return;
     }
-    open.forEach(function (o) {
-      var total = o.items.reduce(function (s, i) { return s + unitPrice(i) * i.qty; }, 0);
-      var qty = o.items.reduce(function (s, i) { return s + i.qty; }, 0);
-      var badge = o.orderType === 'takeaway'
-        ? '<span class="type-badge takeaway">🥡 กลับบ้าน</span>'
-        : '<span class="type-badge dinein">🍽️ ทานที่ร้าน</span>';
-      var card = document.createElement('div');
-      card.className = 'card table-card';
-      card.innerHTML =
-        '<div>' +
-          '<div class="t-name">' + o.table + '</div>' +
-          '<div class="t-meta">' + qty + ' จาน · ' + o.createdAt.toLocaleTimeString('th-TH', {hour:'2-digit', minute:'2-digit'}) + '</div>' +
-          badge +
-          '<div class="go">แตะเพื่อเปิดบิล &rsaquo;</div>' +
-        '</div>' +
-        '<div class="t-amt">' + fmt(total) + '</div>';
-      card.addEventListener('click', function () { openBillSheet(o.id); });
-      wrap.appendChild(card);
-    });
+    var notServed = open.filter(function (o) { return !o.served; });
+    var served = open.filter(function (o) { return o.served; });
+    if (notServed.length) {
+      var label1 = document.createElement('div');
+      label1.className = 'cat-label';
+      label1.textContent = '🍳 รอเสิร์ฟ (' + notServed.length + ')';
+      wrap.appendChild(label1);
+      notServed.forEach(function (o) { wrap.appendChild(buildBillCard(o)); });
+    }
+    if (served.length) {
+      var label2 = document.createElement('div');
+      label2.className = 'cat-label';
+      label2.textContent = '✅ เสิร์ฟแล้ว รอปิดบิล (' + served.length + ')';
+      wrap.appendChild(label2);
+      served.forEach(function (o) { wrap.appendChild(buildBillCard(o)); });
+    }
   }
 
   function openBillSheet(orderId) {
@@ -1568,6 +1631,7 @@
     var searchBox = document.getElementById('menuSearchInput');
     renderMenuList(searchBox ? searchBox.value.trim() : '');
     renderCartBar();
+    updateBillsBadge();
     var activeSection = document.querySelector('.view.active');
     var activeName = activeSection ? activeSection.id.replace('view-', '') : '';
     if (activeName === 'bills') renderBills();
@@ -1694,6 +1758,7 @@
   document.getElementById('todayLabel').textContent = new Date().toLocaleDateString('th-TH', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   renderMenuList();
   renderCartBar();
+  updateBillsBadge();
   setSyncBadge('connecting');
 })();
 </script>
