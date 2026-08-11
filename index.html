@@ -382,6 +382,14 @@
         <div class="cat-label" style="margin-top:0">สรุปย้อนหลังรายวัน (แตะเพื่อดูวันนั้น)</div>
         <div id="dailyHistory"></div>
       </div>
+
+      <div class="card">
+        <div class="cat-label" style="margin-top:0">สำรองข้อมูล / ส่งออกรายงาน</div>
+        <button class="btn-secondary" id="exportCsvBtn" style="margin-top:4px;">📊 ดาวน์โหลดรายงาน CSV (ตามช่วงที่เลือกด้านบน)</button>
+        <button class="btn-secondary" id="exportBackupBtn">📥 ดาวน์โหลดสำรองข้อมูลทั้งหมด (.json)</button>
+        <button class="btn-secondary" id="importBackupBtn">📤 นำเข้าข้อมูลจากไฟล์สำรอง</button>
+        <input type="file" id="importFileInput" accept="application/json" style="display:none;">
+      </div>
     </section>
 
     <!-- MENU MANAGEMENT VIEW -->
@@ -1234,6 +1242,131 @@
     ov.addEventListener('click', function (e) { if (e.target === ov) closeOverlay(ov.id); });
   });
   function closeOverlay(id) { document.getElementById(id).classList.add('hidden'); }
+
+  // ---------- Export / Import ----------
+  function downloadFile(filename, content, mime) {
+    var blob = new Blob([content], { type: mime });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function exportBackupJSON() {
+    var state = {
+      exportedAt: new Date().toISOString(),
+      menu: menu,
+      orders: orders.map(function (o) {
+        return Object.assign({}, o, {
+          createdAt: o.createdAt ? o.createdAt.toISOString() : null,
+          paidAt: o.paidAt ? o.paidAt.toISOString() : null
+        });
+      }),
+      expenses: expenses.map(function (e) {
+        return Object.assign({}, e, { date: e.date.toISOString() });
+      }),
+      nextMenuId: nextMenuId,
+      nextOrderId: nextOrderId,
+      nextExpenseId: nextExpenseId
+    };
+    var dateStr = toDateInputValue(new Date());
+    downloadFile('laksi-backup-' + dateStr + '.json', JSON.stringify(state, null, 2), 'application/json');
+    showToast('ดาวน์โหลดไฟล์สำรองข้อมูลแล้ว');
+  }
+
+  function csvEscape(val) {
+    var s = String(val == null ? '' : val);
+    if (/[",\n]/.test(s)) s = '"' + s.replace(/"/g, '""') + '"';
+    return s;
+  }
+
+  function exportCSVReport() {
+    var rows = [];
+    rows.push(['ประเภท', 'วันที่', 'เวลา', 'โต๊ะ/ลูกค้า', 'ทานที่ร้าน/กลับบ้าน', 'รายการ', 'จำนวน', 'ราคาต่อหน่วย', 'รวม', 'วิธีชำระ'].map(csvEscape).join(','));
+    var paidInRange = orders.filter(function (o) {
+      if (o.status !== 'paid') return false;
+      var t = o.paidAt || o.createdAt;
+      return t >= currentRange.from && t < currentRange.to;
+    });
+    paidInRange.forEach(function (o) {
+      o.items.forEach(function (i) {
+        var t = o.paidAt || o.createdAt;
+        rows.push([
+          'ออเดอร์', fmtDateShort(t), t.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }),
+          o.table, (o.orderType === 'takeaway' ? 'กลับบ้าน' : 'ทานที่ร้าน'),
+          displayName(i), i.qty, unitPrice(i), unitPrice(i) * i.qty,
+          (o.paymentMethod === 'transfer' ? 'เงินโอน' : 'เงินสด')
+        ].map(csvEscape).join(','));
+      });
+    });
+    var expInRange = expenses.filter(function (e) { return e.date >= currentRange.from && e.date < currentRange.to; });
+    expInRange.forEach(function (e) {
+      rows.push(['รายจ่าย', fmtDateShort(e.date), '', e.cat, '', e.note || '', '', '', e.amount, ''].map(csvEscape).join(','));
+    });
+    if (paidInRange.length === 0 && expInRange.length === 0) {
+      showToast('ไม่มีข้อมูลในช่วงที่เลือก');
+      return;
+    }
+    var csv = '﻿' + rows.join('\r\n');
+    var dateStr = toDateInputValue(new Date());
+    downloadFile('laksi-report-' + dateStr + '.csv', csv, 'text/csv;charset=utf-8');
+    showToast('ดาวน์โหลดรายงาน CSV แล้ว');
+  }
+
+  function importBackupJSON(file) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var state;
+      try {
+        state = JSON.parse(reader.result);
+      } catch (e) {
+        alert('ไฟล์ไม่ถูกต้อง ไม่สามารถนำเข้าข้อมูลได้');
+        return;
+      }
+      if (!state || !Array.isArray(state.menu) || !Array.isArray(state.orders) || !Array.isArray(state.expenses)) {
+        alert('ไฟล์ไม่ถูกต้อง ไม่สามารถนำเข้าข้อมูลได้');
+        return;
+      }
+      var ok = confirm('การนำเข้าข้อมูลจะเขียนทับข้อมูลปัจจุบันทั้งหมดในเครื่องนี้ (เมนู, ออเดอร์, รายจ่าย) ต้องการดำเนินการต่อหรือไม่?');
+      if (!ok) return;
+      try {
+        menu = state.menu;
+        orders = state.orders.map(function (o) {
+          return Object.assign({}, o, {
+            createdAt: o.createdAt ? new Date(o.createdAt) : new Date(),
+            paidAt: o.paidAt ? new Date(o.paidAt) : null
+          });
+        });
+        expenses = state.expenses.map(function (e) {
+          return Object.assign({}, e, { date: new Date(e.date) });
+        });
+        nextMenuId = state.nextMenuId || nextMenuId;
+        nextOrderId = state.nextOrderId || nextOrderId;
+        nextExpenseId = state.nextExpenseId || nextExpenseId;
+        saveState();
+        renderMenuList();
+        renderMenuMgmt();
+        renderDashboard();
+        renderCartBar();
+        showToast('นำเข้าข้อมูลสำเร็จ');
+      } catch (e) {
+        alert('ไฟล์ไม่ถูกต้อง ไม่สามารถนำเข้าข้อมูลได้');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  document.getElementById('exportCsvBtn').addEventListener('click', exportCSVReport);
+  document.getElementById('exportBackupBtn').addEventListener('click', exportBackupJSON);
+  document.getElementById('importBackupBtn').addEventListener('click', function () {
+    document.getElementById('importFileInput').click();
+  });
+  document.getElementById('importFileInput').addEventListener('change', function (e) {
+    var file = e.target.files && e.target.files[0];
+    if (file) importBackupJSON(file);
+    e.target.value = '';
+  });
 
   // ---------- Persistent storage (this device only) ----------
   var STORAGE_KEY = 'laksi_pos_state_v1';
