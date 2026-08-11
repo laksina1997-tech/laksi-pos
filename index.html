@@ -495,7 +495,7 @@
   <div class="overlay hidden" id="quickAddonSheet">
     <div class="sheet">
       <div class="sheet-head">
-        <h3 id="quickAddonTitle">เลือกไข่</h3>
+        <h3 id="quickAddonTitle">เลือกเพิ่มเติม</h3>
         <button class="close" data-close="quickAddonSheet">✕</button>
       </div>
       <div class="sheet-body" id="quickAddonButtons"></div>
@@ -582,9 +582,10 @@
   ];
   var nextMenuId = 13;
   var ADDONS = [
-    { key: 'egg_fried', label: 'ไข่ดาว', price: 10, cost: 4 },
-    { key: 'egg_soft', label: 'ไข่ข้น', price: 10, cost: 4 },
-    { key: 'egg_boiled', label: 'ไข่ต้ม', price: 10, cost: 4 }
+    { key: 'egg_fried', label: 'ไข่ดาว', price: 10, cost: 4, emoji: '🥚' },
+    { key: 'egg_soft', label: 'ไข่ข้น', price: 10, cost: 4, emoji: '🥚' },
+    { key: 'egg_boiled', label: 'ไข่ต้ม', price: 10, cost: 4, emoji: '🥚' },
+    { key: 'extra', label: 'พิเศษ', price: 10, cost: 4, emoji: '⭐' }
   ];
   var orders = [];      // {id, table, orderType:'dinein'|'takeaway', items:[{menuId,name,basePrice,baseCost,addon,qty}], status:'open'|'paid', createdAt, paidAt, paymentMethod, cashReceived, change}
   var nextOrderId = 1;
@@ -690,13 +691,13 @@
 
   // ---------- Quick add-on picker (shown right after tapping a dish) ----------
   function openQuickAddonSheet(m) {
-    document.getElementById('quickAddonTitle').textContent = m.name + ' · เลือกไข่';
+    document.getElementById('quickAddonTitle').textContent = m.name + ' · เลือกเพิ่มเติม';
     var wrap = document.getElementById('quickAddonButtons');
     wrap.innerHTML = '';
     var noneBtn = document.createElement('button');
     noneBtn.type = 'button';
     noneBtn.className = 'quick-addon-btn';
-    noneBtn.innerHTML = '<span>ไม่เพิ่มไข่</span><span>' + fmt(m.price) + '</span>';
+    noneBtn.innerHTML = '<span>ไม่เพิ่ม</span><span>' + fmt(m.price) + '</span>';
     noneBtn.addEventListener('click', function () {
       addToCart(m, null);
       closeOverlay('quickAddonSheet');
@@ -707,7 +708,7 @@
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'quick-addon-btn';
-      btn.innerHTML = '<span>🥚 ' + a.label + '</span><span class="plus">+' + a.price + '</span>';
+      btn.innerHTML = '<span>' + a.emoji + ' ' + a.label + '</span><span class="plus">+' + a.price + '</span>';
       btn.addEventListener('click', function () {
         addToCart(m, a.key);
         closeOverlay('quickAddonSheet');
@@ -773,12 +774,12 @@
 
       var addonWrap = document.createElement('div');
       addonWrap.className = 'addon-row';
-      addonWrap.appendChild(makeAddonPill('ไม่เพิ่มไข่', !l.addon, function () {
+      addonWrap.appendChild(makeAddonPill('ไม่เพิ่ม', !l.addon, function () {
         l.addon = null; renderOrderLines(); renderCartBar();
         document.getElementById('orderTotal').textContent = fmt(cartTotal());
       }));
       ADDONS.forEach(function (a) {
-        addonWrap.appendChild(makeAddonPill('🥚 ' + a.label + ' +' + a.price, l.addon === a.key, function () {
+        addonWrap.appendChild(makeAddonPill(a.emoji + ' ' + a.label + ' +' + a.price, l.addon === a.key, function () {
           l.addon = a.key; renderOrderLines(); renderCartBar();
           document.getElementById('orderTotal').textContent = fmt(cartTotal());
         }));
