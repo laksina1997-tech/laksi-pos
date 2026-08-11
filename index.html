@@ -401,6 +401,11 @@
     <!-- MENU MANAGEMENT VIEW -->
     <section class="view" id="view-menu">
       <h2 class="view-title">จัดการเมนู &amp; ต้นทุน</h2>
+      <div class="card">
+        <div class="cat-label" style="margin-top:0">นำเข้าเมนูจากไฟล์</div>
+        <button class="btn-secondary" id="importMenuBtn" style="margin-top:4px;">📥 นำเข้าเมนูเพิ่ม (ไม่ลบเมนู/ออเดอร์เดิม)</button>
+        <input type="file" id="importMenuFileInput" accept="application/json" style="display:none;">
+      </div>
       <div class="card" style="padding:6px 12px;">
         <div id="menuMgmtList"></div>
       </div>
@@ -504,6 +509,7 @@
         <h3 id="quickAddonTitle">เลือกเพิ่มเติม</h3>
         <button class="close" data-close="quickAddonSheet">✕</button>
       </div>
+      <div class="sheet-body" id="quickProteinButtons" style="display:none;"></div>
       <div class="sheet-body" id="quickAddonButtons"></div>
     </div>
   </div>
@@ -521,7 +527,9 @@
           <label>หมวดหมู่</label>
           <select id="itemCatInput">
             <option value="จานเดียว">อาหารจานเดียว</option>
+            <option value="เมนูเส้น">เมนูเส้น</option>
             <option value="กับข้าว">กับข้าว</option>
+            <option value="อาหารป่า">อาหารป่า</option>
             <option value="เครื่องดื่ม">เครื่องดื่ม</option>
             <option value="เพิ่มเติม">เพิ่มเติม (ข้าว/ของเสริม)</option>
           </select>
@@ -593,6 +601,19 @@
     { key: 'egg_boiled', label: 'ไข่ต้ม', price: 10, cost: 4, emoji: '🥚' },
     { key: 'extra', label: 'พิเศษ', price: 10, cost: 4, emoji: '⭐' }
   ];
+  // ราคาขายเท่ากันทุกตัวเลือกเนื้อสัตว์ (ตามป้ายเมนูหน้าร้าน: ธรรมดา 50 / พิเศษ 60 ใช้ปุ่ม "พิเศษ" ด้านบนแทน)
+  var PROTEINS = [
+    { key: 'moo', label: 'หมู' },
+    { key: 'gai', label: 'ไก่' },
+    { key: 'kai_gai', label: 'เครื่องในไก่' },
+    { key: 'talay', label: 'ทะเล' },
+    { key: 'moo_krob', label: 'หมูกรอบ' },
+    { key: 'moo_yor', label: 'หมูยอ' },
+    { key: 'neua', label: 'เนื้อวัว' },
+    { key: 'pla_muek', label: 'ปลาหมึก' }
+  ];
+  // หมวดที่ต้องเลือกเนื้อสัตว์ก่อน (จานเดียว/เมนูเส้น) — ยกเว้นเมนูที่ตั้งค่า noProtein ไว้ (เช่น เมนูที่ระบุวัตถุดิบตายตัวในชื่ออยู่แล้ว)
+  var PROTEIN_CATS = ['จานเดียว', 'เมนูเส้น'];
   var orders = [];      // {id, table, orderType:'dinein'|'takeaway', items:[{menuId,name,basePrice,baseCost,addon,qty}], status:'open'|'paid', createdAt, paidAt, paymentMethod, cashReceived, change}
   var nextOrderId = 1;
   var expenses = [];    // {id, date, cat, note, amount}
@@ -608,11 +629,19 @@
 
   var fmt = function (n) { return (n < 0 ? '-฿' : '฿') + Math.abs(Math.round(n)).toLocaleString('th-TH'); };
 
-  // ---------- Add-on / line-item helpers ----------
+  // ---------- Add-on / protein / line-item helpers ----------
   function addonInfo(key) { return ADDONS.find(function (a) { return a.key === key; }); }
+  function proteinInfo(key) { return PROTEINS.find(function (p) { return p.key === key; }); }
   function unitPrice(l) { var a = addonInfo(l.addon); return l.basePrice + (a ? a.price : 0); }
   function unitCost(l) { var a = addonInfo(l.addon); return l.baseCost + (a ? a.cost : 0); }
-  function displayName(l) { var a = addonInfo(l.addon); return l.name + (a ? ' (' + a.label + ')' : ''); }
+  function displayName(l) {
+    var tags = [];
+    var p = proteinInfo(l.protein);
+    if (p) tags.push(p.label);
+    var a = addonInfo(l.addon);
+    if (a) tags.push(a.label);
+    return l.name + (tags.length ? ' (' + tags.join(', ') + ')' : '');
+  }
 
   // ---------- Date helpers ----------
   function startOfDay(d) { var x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
@@ -644,7 +673,9 @@
   }
 
   // ---------- Render: order/menu picker ----------
-  var EGG_CATS = ['จานเดียว', 'กับข้าว'];
+  var EGG_CATS = ['กับข้าว']; // หมวดที่มีแค่ขั้นตอนเลือกไข่/พิเศษ ไม่ต้องเลือกเนื้อสัตว์
+  function needsProteinStep(m) { return PROTEIN_CATS.indexOf(m.cat) !== -1 && !m.noProtein; }
+  function needsAddonSheet(m) { return EGG_CATS.indexOf(m.cat) !== -1 || PROTEIN_CATS.indexOf(m.cat) !== -1; }
 
   document.getElementById('menuSearchInput').addEventListener('input', function () {
     renderMenuList(this.value.trim());
@@ -672,7 +703,8 @@
         el.className = 'menu-item';
         el.innerHTML = '<span class="name">' + m.name + '</span><span class="price">' + fmt(m.price) + '</span>';
         el.addEventListener('click', function () {
-          if (EGG_CATS.indexOf(m.cat) !== -1) openQuickAddonSheet(m);
+          if (needsProteinStep(m)) openProteinSheet(m);
+          else if (needsAddonSheet(m)) openQuickAddonSheet(m, null);
           else { addToCart(m); showToast('+1 ' + m.name); }
         });
         grid.appendChild(el);
@@ -684,30 +716,56 @@
     }
   }
 
-  function addToCart(m, addon) {
+  function addToCart(m, addon, protein) {
     addon = addon || null;
-    var line = cart.find(function (l) { return l.menuId === m.id && l.addon === addon; });
+    protein = protein || null;
+    var line = cart.find(function (l) { return l.menuId === m.id && l.addon === addon && l.protein === protein; });
     if (line) line.qty += 1;
-    else cart.push({ menuId: m.id, name: m.name, basePrice: m.price, baseCost: m.cost, addon: addon, qty: 1, note: '' });
+    else cart.push({ menuId: m.id, name: m.name, basePrice: m.price, baseCost: m.cost, addon: addon, protein: protein, qty: 1, note: '' });
     renderCartBar();
   }
 
   function cartTotal() { return cart.reduce(function (s, l) { return s + unitPrice(l) * l.qty; }, 0); }
   function cartCount() { return cart.reduce(function (s, l) { return s + l.qty; }, 0); }
 
-  // ---------- Quick add-on picker (shown right after tapping a dish) ----------
-  function openQuickAddonSheet(m) {
-    document.getElementById('quickAddonTitle').textContent = m.name + ' · เลือกเพิ่มเติม';
+  // ---------- Protein picker (step 1, shown for จานเดียว/เมนูเส้น) ----------
+  function openProteinSheet(m) {
+    document.getElementById('quickAddonTitle').textContent = m.name + ' · เลือกเนื้อสัตว์';
+    var proteinWrap = document.getElementById('quickProteinButtons');
+    var addonWrap = document.getElementById('quickAddonButtons');
+    proteinWrap.innerHTML = '';
+    proteinWrap.style.display = '';
+    addonWrap.style.display = 'none';
+    addonWrap.innerHTML = '';
+    PROTEINS.forEach(function (p) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'quick-addon-btn';
+      btn.innerHTML = '<span>' + p.label + '</span>';
+      btn.addEventListener('click', function () {
+        openQuickAddonSheet(m, p.key);
+      });
+      proteinWrap.appendChild(btn);
+    });
+    document.getElementById('quickAddonSheet').classList.remove('hidden');
+  }
+
+  // ---------- Add-on picker (step 2, or step 1 for dishes without protein choice) ----------
+  function openQuickAddonSheet(m, protein) {
+    var proteinLabel = protein ? proteinInfo(protein).label : null;
+    document.getElementById('quickAddonTitle').textContent = m.name + (proteinLabel ? ' (' + proteinLabel + ')' : '') + ' · เลือกเพิ่มเติม';
+    document.getElementById('quickProteinButtons').style.display = 'none';
     var wrap = document.getElementById('quickAddonButtons');
+    wrap.style.display = '';
     wrap.innerHTML = '';
     var noneBtn = document.createElement('button');
     noneBtn.type = 'button';
     noneBtn.className = 'quick-addon-btn';
     noneBtn.innerHTML = '<span>ไม่เพิ่ม</span><span>' + fmt(m.price) + '</span>';
     noneBtn.addEventListener('click', function () {
-      addToCart(m, null);
+      addToCart(m, null, protein);
       closeOverlay('quickAddonSheet');
-      showToast('+1 ' + m.name);
+      showToast('+1 ' + m.name + (proteinLabel ? ' (' + proteinLabel + ')' : ''));
     });
     wrap.appendChild(noneBtn);
     ADDONS.forEach(function (a) {
@@ -716,9 +774,9 @@
       btn.className = 'quick-addon-btn';
       btn.innerHTML = '<span>' + a.emoji + ' ' + a.label + '</span><span class="plus">+' + a.price + '</span>';
       btn.addEventListener('click', function () {
-        addToCart(m, a.key);
+        addToCart(m, a.key, protein);
         closeOverlay('quickAddonSheet');
-        showToast('+1 ' + m.name + ' (' + a.label + ')');
+        showToast('+1 ' + m.name + ' (' + (proteinLabel ? proteinLabel + ', ' : '') + a.label + ')');
       });
       wrap.appendChild(btn);
     });
@@ -755,8 +813,11 @@
       var up = unitPrice(l);
       var top = document.createElement('div');
       top.className = 'cart-line-top';
+      var tagBits = [];
+      if (l.protein) tagBits.push(proteinInfo(l.protein).label);
+      if (l.addon) tagBits.push(addonInfo(l.addon).label);
       top.innerHTML =
-        '<div><div class="li-name">' + l.name + (l.addon ? ' <span style="color:var(--series-1);">(' + addonInfo(l.addon).label + ')</span>' : '') + '</div><div class="li-price">' + fmt(up) + ' / จาน</div></div>' +
+        '<div><div class="li-name">' + l.name + (tagBits.length ? ' <span style="color:var(--series-1);">(' + tagBits.join(', ') + ')</span>' : '') + '</div><div class="li-price">' + fmt(up) + ' / จาน</div></div>' +
         '<div class="qty-ctl">' +
           '<button data-act="minus">−</button>' +
           '<span class="q">' + l.qty + '</span>' +
@@ -1383,6 +1444,55 @@
   document.getElementById('importFileInput').addEventListener('change', function (e) {
     var file = e.target.files && e.target.files[0];
     if (file) importBackupJSON(file);
+    e.target.value = '';
+  });
+
+  // ---------- Merge-only menu import (adds/updates menu items WITHOUT touching orders/expenses) ----------
+  function importMenuPatch(file) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var patch;
+      try {
+        patch = JSON.parse(reader.result);
+      } catch (e) {
+        alert('ไฟล์ไม่ถูกต้อง ไม่สามารถนำเข้าเมนูได้');
+        return;
+      }
+      if (!patch || !Array.isArray(patch.menu)) {
+        alert('ไฟล์ไม่ถูกต้อง ไม่สามารถนำเข้าเมนูได้');
+        return;
+      }
+      var added = 0, updated = 0;
+      patch.menu.forEach(function (item) {
+        if (!item || !item.name) return;
+        var existing = menu.find(function (m) { return m.name === item.name; });
+        if (existing) {
+          existing.cat = item.cat || existing.cat;
+          existing.price = (item.price != null) ? item.price : existing.price;
+          existing.cost = (item.cost != null) ? item.cost : existing.cost;
+          if (item.noProtein) existing.noProtein = true;
+          updated++;
+        } else {
+          var newItem = { id: nextMenuId++, name: item.name, cat: item.cat || 'จานเดียว', price: item.price || 0, cost: item.cost || 0 };
+          if (item.noProtein) newItem.noProtein = true;
+          menu.push(newItem);
+          added++;
+        }
+      });
+      saveState();
+      renderMenuList();
+      renderMenuMgmt();
+      showToast('นำเข้าเมนูสำเร็จ: เพิ่มใหม่ ' + added + ' รายการ, อัปเดต ' + updated + ' รายการ');
+    };
+    reader.readAsText(file);
+  }
+
+  document.getElementById('importMenuBtn').addEventListener('click', function () {
+    document.getElementById('importMenuFileInput').click();
+  });
+  document.getElementById('importMenuFileInput').addEventListener('change', function (e) {
+    var file = e.target.files && e.target.files[0];
+    if (file) importMenuPatch(file);
     e.target.value = '';
   });
 
